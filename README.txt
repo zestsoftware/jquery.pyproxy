@@ -9,6 +9,10 @@ return complex data to the Javascript client that will have to decrypt
 them.
 
 
+IMPORTANT: the product is not yet finalized and might not work in
+every situations.
+API described in this file in how it should be at the first release.
+
 Simple example
 --------------
 
