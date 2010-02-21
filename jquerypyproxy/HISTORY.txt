@@ -1,0 +1,8 @@
+History of jquery.pyproxy
+=========================
+
+0.1 (unreleased)
+----------------
+
+- added log file + python egg. [vincent]
+
