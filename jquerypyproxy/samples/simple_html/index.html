@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="../../../jquery.pyproxy.js"></script>
+    <script type="text/Javascript">
+      pyproxy_debug_mode = true;
+
+      $(document).ready(function() {
+        $('#my_link').pyproxy('click', 'add_item.json');
+        $('.new_item').pyproxy('click', 'toggle_item.json');
+      });
+    </script>
+
+    <style>
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="my_list">
+      <li><a id="my_link">Click me</a></li>
+    </ul>
+  </body>
+</html>

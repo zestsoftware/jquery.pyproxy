@@ -1,0 +1,5 @@
+[
+  {"selector": "#my_list",
+   "call": "append",
+   "args": ["<li class=\"new_item\">A new challenger appears</li>"]}
+]

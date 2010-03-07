@@ -1,0 +1,5 @@
+[
+  {"selector": "#my_link",
+   "call": "toggleClass",
+   "args": ["hidden"]}
+]
