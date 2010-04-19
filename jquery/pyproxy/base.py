@@ -19,13 +19,12 @@ def custom_endswith(str, ext_list):
 # Code taken from here:
 # http://stackoverflow.com/questions/487971/is-there-a-standard-way-to-list-names-of-python-modules-in-a-package
 MODULE_EXTENSIONS = ['.py', '.pyc', '.pyo']
-def package_contents(package_name):
-    file, pathname, description = imp.find_module(package_name)
-    if file:
-        raise ImportError('Not a package: %r', package_name)
+def package_contents():
+    from jquery.pyproxy import plugins as plugin_module
+    folder = '/'.join(plugin_module.__file__.split('/')[:-1])
     # Use a set because some may be both source and compiled.
-    return [os.path.splitext(module)[0]
-            for module in os.listdir(pathname)
+    return ['.'.join(module.split('.')[:-1])
+            for module in os.listdir(folder)
             if custom_endswith(module, MODULE_EXTENSIONS) and
             not module.startswith('__')]
 
@@ -118,10 +117,10 @@ class JQueryProxy(object):
         self.calls = []
 
         # We build the grammar from the plugins.
-        plugins = package_contents('plugins')
+        plugins = package_contents()
         for plugin in plugins:
             try:
-                exec 'from plugins.%s import grammar' % plugin
+                exec 'from jquery.pyproxy.plugins.%s import grammar' % plugin
                 self.extend_grammar(grammar)
                     
             except ImportError:
