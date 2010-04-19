@@ -4,7 +4,8 @@ History of jquery.pyproxy
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added 'PreventDefault' in make_call - using 'return false' works for
+  links but is not enough for submit buttons. [vincent]
 
 
 0.1 (2010-04-19)

@@ -149,8 +149,9 @@ var pyproxy_debug_mode = false;
      * items matching the selctor.
      * You must use events that can be used with 'live'.
      */   
-    $.fn.pyproxy = function(event, url, data, callback) {
-	make_call = function() {
+    $.fn.pyproxy = function(event, url, data, callback) {	
+	make_call = function(e) {
+	    e.preventDefault()
 	    $.pyproxy_call(url, data, callback)
 	}
 
