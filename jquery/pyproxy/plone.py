@@ -9,7 +9,7 @@ from Products.CMFPlone import PloneMessageFactory as _p
 
 from base import JQueryProxy as JQueryProxyBase
 
-class JQueryProxy(JqueryProxyBase):
+class JQueryProxy(JQueryProxyBase):
 
     def _get_default_language(self):
         portal = getSite()

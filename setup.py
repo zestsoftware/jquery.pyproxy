@@ -8,8 +8,8 @@ def get_file_contents(filename):
     this_file.close()
     return contents
 
-version = get_file_contents('jquerypyproxy/version.txt')
-history = get_file_contents('jquerypyproxy/HISTORY.txt')
+version = get_file_contents('jquery/pyproxy/version.txt')
+history = get_file_contents('jquery/pyproxy/HISTORY.txt')
 readme = get_file_contents('README.txt')
 long = "%s\n\n\n%s" % (readme, history)
 

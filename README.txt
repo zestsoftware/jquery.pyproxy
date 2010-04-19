@@ -109,7 +109,7 @@ This dictionnary must be called 'grammar'.
 
 2) you do not use the source, just the egg.
 Create a new Python class, subclassing JQueryProxy. Declare a 'grammar' property
-in this object that describes your grammar.
+in this object that describes your grammar::
 
   def MyJqueryProxy(JQueryProxy):
       grammar = {'showDialog': [[str, unicode],
@@ -129,17 +129,17 @@ Limitations
 jquery.pyproxytries to match as much as possible the jquery syntax so it's
 easy to use existing code etc.
 There is still two (at least) limitations. First, you can not do chained calls,
-like this:
+like this::
 
   jq('#mydiv').css('width': '200px').fadeIn()
 
-Second, you can not store your selector, like this:
+Second, you can not store your selector, like this::
 
   mydiv = jq('#mydiv')
   mydiv.css('width': '200px')
   mydiv.fadeIn()
 
-The proper way to write this code is:
+The proper way to write this code is::
 
   jq('#mydiv').css('width': '200px')
   jq('#mydiv').fadeIn()
@@ -154,7 +154,7 @@ If this solution is not acceptable, you can still update the
 @jquery decorator to work with your framework. The only
 thing this decorator does is to transform the JQueryProxy object
 returned by the function into JSON.
-To make the transformation, this code is enough:
+To make the transformation, this code is enough::
 
   import simplejson as json
   jq_to_json = json.dumps(jq.json_serializable())

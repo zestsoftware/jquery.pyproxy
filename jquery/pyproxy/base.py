@@ -6,9 +6,19 @@ import imp
 import os
 
 
+def custom_endswith(str, ext_list):
+    """ Python 2.4 do not accept a list/tuple for
+    endswith. So we build a custom one.
+    """
+    for ext in ext_list:
+        if str.endswith(ext):
+            return True
+
+    return False
+
 # Code taken from here:
 # http://stackoverflow.com/questions/487971/is-there-a-standard-way-to-list-names-of-python-modules-in-a-package
-MODULE_EXTENSIONS = ('.py', '.pyc', '.pyo')
+MODULE_EXTENSIONS = ['.py', '.pyc', '.pyo']
 def package_contents(package_name):
     file, pathname, description = imp.find_module(package_name)
     if file:
@@ -16,7 +26,7 @@ def package_contents(package_name):
     # Use a set because some may be both source and compiled.
     return [os.path.splitext(module)[0]
             for module in os.listdir(pathname)
-            if module.endswith(MODULE_EXTENSIONS) and
+            if custom_endswith(module, MODULE_EXTENSIONS) and
             not module.startswith('__')]
 
 
@@ -128,7 +138,7 @@ class JQueryProxy(object):
     def __call__(self, selector = ''):
         self.selectors.append(selector)
         
-        self.calls.append(JQueryCommand())
+        self.calls.append(JQueryCommand(self.grammar))
         return self.calls[-1]
 
     def hide_errors(self, errors):

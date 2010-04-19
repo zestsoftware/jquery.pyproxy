@@ -3,7 +3,6 @@ import simplejson as json
 
 from base import JQueryProxy
 
-
 def jquery(function):
     """ The @jquery decorator can be added to a function
     that returns a JQuery object.

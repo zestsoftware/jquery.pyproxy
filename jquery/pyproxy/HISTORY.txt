@@ -1,0 +1,25 @@
+History of jquery.pyproxy
+=========================
+
+0.1 (unreleased)
+----------------
+
+- renamed jquerypyproxy in jquery.pyproxy [vincent]
+
+- bugfix in base: the grammar was not passed to the objects
+  created. [vincent] 
+
+- bugfix in base: str.endswith(tuple) only works in python 2.5+, added
+  a custom endswith. [vincent]
+
+- bugfix in plone.py: typo in the class name. [vincent]
+
+- added append in grammar. [vincent]
+
+- added basic javascript calls. [vincent]
+
+- added JQueryProxy Python class and decorators for plone and
+  Django. [vincent]
+
+- added log file + python egg. [vincent]
+

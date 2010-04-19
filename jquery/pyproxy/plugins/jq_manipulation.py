@@ -4,6 +4,7 @@ STR_TYPE = [str, unicode]
 
 grammar = {'addClass': [STR_TYPE],
            'after': [STR_TYPE],
+           'append': [STR_TYPE],
            'appendTo': [STR_TYPE],
            'attr': [STR_TYPE, [str, unicode, int, float]],
            'before': [STR_TYPE],
