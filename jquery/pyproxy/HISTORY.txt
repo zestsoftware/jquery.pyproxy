@@ -4,6 +4,9 @@ History of jquery.pyproxy
 0.2 (unreleased)
 ----------------
 
+- bugfix: fadeOut and fadeIn did not have correct names in
+  plugins/jq_effects. [vincent]
+
 - Added 'PreventDefault' in make_call - using 'return false' works for
   links but is not enough for submit buttons. [vincent]
 
