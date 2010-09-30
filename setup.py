@@ -21,7 +21,7 @@ setup(name='jquery.pyproxy',
       keywords='',
       author='Vincent Pretre',
       author_email='vincent.pretre@gmail.com',
-      url='',
+      url='http://github.com/vincent-psarga/jquery.pyproxy',
       license='GPL',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
@@ -30,6 +30,5 @@ setup(name='jquery.pyproxy',
           # -*- Extra requirements: -*-
       ],
       entry_points="""
-      # -*- Entry points: -*-
       """,
       )

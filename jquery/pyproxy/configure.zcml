@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <browser:resource
+      name="jquery.pyproxy.js"
+      file="media/jquery.pyproxy.js"
+      />
+
+  <!-- -*- extra stuff goes here -*- -->
+  <genericsetup:registerProfile
+      name="default"
+      title="jquery.pyproxy"
+      directory="profiles/default"
+      description='jquery.pyproxy'
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+</configure>
