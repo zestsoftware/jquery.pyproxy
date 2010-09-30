@@ -6,5 +6,6 @@
 	      enabled="True"
 	      expression=""
 	      id="++resource++jquery.pyproxy.js"
-	      inline="False" />
+	      inline="False"
+              insert-after="jquery-integration.js" />
 </object>

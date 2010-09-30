@@ -17,18 +17,22 @@ setup(name='jquery.pyproxy',
       version=version,
       description="A simple python egg and jquery plugin to easily use JQuery in Django/Plone/.. websites.",
       long_description=long,
-      classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      classifiers=[
+        ],
       keywords='',
       author='Vincent Pretre',
       author_email='vincent.pretre@gmail.com',
       url='http://github.com/vincent-psarga/jquery.pyproxy',
       license='GPL',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      namespace_packages=['jquery'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          # -*- Extra requirements: -*-
+          'setuptools',
       ],
       entry_points="""
+      [z3c.autoinclude.plugin]
+      target = plone
       """,
       )
