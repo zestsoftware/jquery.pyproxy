@@ -8,10 +8,21 @@ update the page the users are seeing. This way, you do not have to
 return complex data to the Javascript client that will have to decrypt
 them.
 
-
 IMPORTANT: the product is not yet finalized and might not work in
 every situations.
-API described in this file in how it should be at the first release.
+
+Installing
+----------
+
+Add jquery.pyproxy to your buildout eggs and run the buildout.
+
+In Plone, go to the quickinstaller and install jquery.pyproxy. 
+
+In Django, you should also add 'django-appmedia' to you buildout eggs
+and 'appmedia' to the list of installed apps. Run buildout, then run
+bin/django symlinkmedia.
+Now in your templates, add:
+  <script type="text/javascript" src="{{MEDIA_URL}}/pyproxy/jquery.pyproxy.min.js"></script>
 
 Simple example
 --------------
@@ -22,12 +33,12 @@ when submitting a comment to your blog, so you will use an Ajax call.
 Here's how you do this with jquery.pyproxy.
 
 First, you need to add the pyproxy javascript plugin to your page:
-  <script type="text/javascript" src="/pyproxy.js"></script>
+
 
 Then, you create a view that will manage the information sent by the user
 (here with django, but the principle is the same with Plone)
 
-from jquery.pyproxy.django import JQueryProxy, jquery
+from jquery.pyproxy.jq_django import JQueryProxy, jquery
 
 # The @jquery decorator handles the transformation of your results
 # into JSON so we can decode it on client side.
