@@ -4,6 +4,15 @@ History of jquery.pyproxy
 0.2 (unreleased)
 ----------------
 
+- renamed django.py in jq_django.py as it was giving conflicts when
+  importing HttpResponse. [vincent]
+
+- moved jquery.pyproxy.js in a folder called 'media' so it can be used
+  easily by django user with django-appmedia. Also added some
+  registration for plone users so jquery.pyproxy appears in the
+  quick_installer and automatically adds the JS file to the
+  jsregistry. [vincent]
+
 - bugfix: fadeOut and fadeIn did not have correct names in
   plugins/jq_effects. [vincent]
 

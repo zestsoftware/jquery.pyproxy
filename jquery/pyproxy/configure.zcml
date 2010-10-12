@@ -12,6 +12,11 @@
       file="media/jquery.pyproxy.js"
       />
 
+  <browser:resource
+      name="jquery.pyproxy.min.js"
+      file="media/jquery.pyproxy.min.js"
+      />
+
   <!-- -*- extra stuff goes here -*- -->
   <genericsetup:registerProfile
       name="default"
