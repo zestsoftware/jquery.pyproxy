@@ -2,3 +2,4 @@
 *.pyo
 *.mo
 *.egg-info
+dist*
