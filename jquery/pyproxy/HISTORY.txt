@@ -4,7 +4,8 @@ History of jquery.pyproxy
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- updated __init__.py to declare the namespace to avoid problems with
+  setuptools 0.7. [vincent]
 
 
 0.2 (2010-10-22)
