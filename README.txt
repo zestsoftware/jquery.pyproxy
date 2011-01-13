@@ -14,15 +14,26 @@ every situations.
 Installing
 ----------
 
-Add jquery.pyproxy to your buildout eggs and run the buildout.
+Add jquery.pyproxy to your buildout eggs and run the buildout, if you
+do not use buildout, you can easy_install jquery.pyproxy (or do as you
+usually do with other products).
 
-In Plone, go to the quickinstaller and install jquery.pyproxy. 
+In Plone, go to the quickinstaller and install jquery.pyproxy. That
+will ensure that you have the Javascript library installed.
 
 In Django, you should also add 'django-appmedia' to you buildout eggs
 and 'appmedia' to the list of installed apps. Run buildout, then run
 bin/django symlinkmedia.
-Now in your templates, add:
+Now in your templates, add::
+
   <script type="text/javascript" src="{{MEDIA_URL}}/pyproxy/jquery.pyproxy.min.js"></script>
+
+If you do not want to use app_media, you can download the javascript
+library from github
+(https://github.com/vincent-psarga/jquery.pyproxy/blob/master/jquery/pyproxy/media/jquery.pyproxy.min.js
+- please ensure to match the egg version and js version) and install
+it to your media folder. You can then include it to your 
+templates.
 
 Simple example
 --------------
@@ -32,40 +43,35 @@ jquery.pyproxy. You do not want user to have to reload the full page
 when submitting a comment to your blog, so you will use an Ajax call.
 Here's how you do this with jquery.pyproxy.
 
-First, you need to add the pyproxy javascript plugin to your page:
+First, you create a view that will manage the information sent by the user
+(here with django, but the principle is the same with Plone)::
 
+  from jquery.pyproxy.jq_django import JQueryProxy, jquery
 
-Then, you create a view that will manage the information sent by the user
-(here with django, but the principle is the same with Plone)
+  # The @jquery decorator handles the transformation of your results
+  # into JSON so we can decode it on client side.
 
-from jquery.pyproxy.jq_django import JQueryProxy, jquery
+  @jquery
+  def ajax_add_comment(request):
+      # The JQuery proxy object helps us to manipulate the page the user sees.
+      jq = JQueryProxy()
+      # The data/form sent with Ajax just apear like a classical POST form.
+      form = request.POST
 
-# The @jquery decorator handles the transformation of your results
-# into JSON so we can decode it on client side.
+      #we do some validation of the form.
+      ...
 
-@jquery
-def ajax_add_comment(request):
-    # The JQuery proxy object helps us to manipulate the page the user sees.
-    jq = JQueryProxy()
-    # The data/form sent with Ajax just apear like a classical POST form.
-    form = request.POST
-
-    #we do some validation of the form.
-    ...
-
-
-    if errors:
-        # We display an error message.
-        jq('#my_error_message').show()
-        return jq
-
-    ...
-    # We display a success message.
-    jq('#my_success_message').show()
-    return jq
+      if errors:
+          # We display an error message.
+          jq('#my_error_message').show()
+          return jq
+      ...
+      # We display a success message.
+      jq('#my_success_message').show()
+      return jq
 
 and finally, bind a jquery.pyproxy action to the button
-used to submit a form.
+used to submit a form::
 
   $(document).ready(function() {
     $('#submit_comment').pyproxy('click',
@@ -74,47 +80,161 @@ used to submit a form.
   });
 
 
-Recognized JQuery methods
--------------------------
+Using the JQueryPyproxy object
+------------------------------
+
+First, you need to import the correct JQueryProxy object:
+
+ - if you use Plone: from jquery.pyproxy.plone import JQueryProxy
+
+ - if you use Django: from jquery.pyproxy.jq_django import JQueryProxy
+
+Both are based on the same object, defined in the base.py module::
+
+      >>> from jquery.pyproxy.base import JQueryProxy
+
+The main idea behind this project was to be able to use the same
+syntax than with jQuery, so you can more or less copy-paste some
+samples on the web or some existing code.
+Of course, as we are using Python, we can not use the dollar sign as a
+identifier::
+
+      >>> $ = JQueryPyproxy()
+      Traceback (most recent call last):
+      ...
+      SyntaxError: invalid syntax
+
+So in our examples we declare our object as 'jq', which is the classic
+way in Plone to name the jQuery object::
+
+      >>> jq = JQueryProxy()
 
 Currently, JQueryProxy supports all manipulation API of JQuery 1.4 and all
 the effect API.
 
+
+      >>> sorted(jq.grammar.keys())
+      ['addClass', 'after', 'animate', 'append', 'appendTo', 'attr',
+       'before', 'css', 'detach', 'empty', 'fadeIn', 'fadeOut', 'fadeTo',
+       'hide', 'html', 'insertAfter', 'insertBefore', 'prepend', 'prependTo',
+       'remove', 'removeAttr', 'removeClass', 'replaceAll', 'replaceWith',
+       'show', 'slideDown', 'slideToggle', 'slideUp', 'text', 'toggle',
+       'toggleClass', 'unwrap', 'wrap', 'wrapAll', 'wrapInner']
+
+So if you know how to use them in jQuery, you know how to use them
+with pyproxy, for example::
+
+      >>> jq('#error_msg').html('Errors have been found, please correct them')
+      >>> jq('#error_email').show()
+
+The way the jQuery methods are declared are matching the API of
+jQuery (except for the callbacks, see the 'Limitations' part). So if
+you use incorrect arguments, you will get errors in the Python code
+(which should help you a lot when debugging, at least you should have
+server logs)::
+
+      >>> jq('.to_slide').slideDown()
+      Traceback (most recent call last):
+      ...
+      TypeError: Method 'slideDown' takes exactly 1 arguments
+
+      >>> jq('.empty').empty('Spanish argument is like Spanish inquisition: no one expects it')
+      Traceback (most recent call last):
+      ...
+      TypeError: Method 'empty' does not take any argument
+
+      >>> jq('.to_fade').fadeTo('something', 'wrong type')
+      Traceback (most recent call last):
+      ...
+      TypeError: Argument 2 of method fadeTo must be: <type 'int'>
+
+Sometimes, you want to reload a complete part of your html code,
+generated by another view for example.
+You do not get any error on the server side but an error in your
+browser's console. This might be due to the fact that some characters
+are causing problem.
+To solve this, you can use the 'clean_string' method defined in the
+base.py file. It replaces returns, backslashes and tabulations (maybe
+more to come after)::
+
+      >>> from jquery.pyproxy.base import clean_string
+      >>> my_html = "<div id=\"bla\">\n\tHo, hi :)\n</div>"
+      >>> clean_string(my_html)
+      '<div id="bla">\\nHo, hi :)\\n</div>'
+
+When you need to have a clear overview of which calls have been done
+by the jq object, you can use the 'list_calls' method::
+
+      >>> jq.list_calls()
+      ["jq('#error_msg').html(Errors have been found, please correct them)",
+       "jq('#error_email').show()",
+       "jq('.to_slide').slideDown()",
+       "jq('.empty').empty()",
+       "jq('.to_fade').fadeTo()"]
+
+You can see that even failing calls are stored here (but not the
+parameters).
+This is due to the fact that we are in the doctests. In
+real-life use case, as a exception is raised your code will stop after
+the problem has been found.
+
+
 Extending JQuery proxy
 ----------------------
 
-If you want to use a custom JQuery plugin, you can extend the JQueryProxy
-object so it recognizes the method provided by your plugin.
+If you want to be able to use jQuery methods that are not known by
+default, you have to extend the list of methods known by JQueryPyproxy.
+In our example, we'll consider that you want to use a 'showDialog'
+method from an extra-plugin.
+By default, it does not works (which is logical as pyproxy does not
+have a clue of which jQuery plugins you are using)::
 
-To do this, you must create a dictionnary that describes the interface of 
-the jquery plugin you want to use.
+      >>> jq.showDialog()
+      Traceback (most recent call last):
+      ...
+      AttributeError: 'JQueryProxy' object has no attribute 'showDialog'
 
-Let's say the plugin provides one method called showDialog. This method
-take three parameters: the first one is a string, the second one is a string
-or a integer, the last one is a dictionnary and is optionnal.
-The dictionnary describing this plugin is the following:
+To be able to use the method, you need to define the list of extra
+methods you want to use and the parameters expected.
+Here we only define the 'showDialog' method, taking three parameters
+(the first one is a string or unicode, the second one an int, a string
+or a unicode and the last one a optional dictionnary)::
 
-  my_plugin = {'showDialog': [[str, unicode],
-	    		     [str, unicode, int],
-			     [dict, NoneType]]}
+      >>> from types import NoneType
+      >>> my_plugin = {'showDialog': [[str, unicode],
+      ...                             [str, unicode, int],
+      ...                             [dict, NoneType]]}
 
-Then, the JQueryProxy object must be aware of this extension. In your view,
-you can say:
+Then, you can use the 'extend_grammar' method so your methods are recognized::
 
-  @jquery
-  def my_view(request):
-      jq = JQueryProxy()
-      jq.extend_grammar(my_plugin)
+      >>> jq.extend_grammar(my_plugin)
+      >>> 'showDialog' in jq.grammar
+      True
+      >>> jq.grammar['showDialog']
+      [[<type 'str'>, <type 'unicode'>],
+       [<type 'str'>, <type 'unicode'>, <type 'int'>],
+       [<type 'dict'>, <type 'NoneType'>]]
+      >>> jq('#my_dialog').showDialog('some text', 42, dict(opt1 = 2, opt2 = False))
 
-      # Now, you can directly use this new method in your code.
-      jq.showDialog('#something', 12, dict(opt1 = 2, opt2 = False))
+And of course it respect the grammar you defined::
+      >>> jq('.bla').showDialog()
+      Traceback (most recent call last):
+      ...
+      TypeError: Method 'showDialog' takes between 2 and 3 arguments
 
-If you need to use the custom plugin in all your Ajax views, it will be painfull
+      >>> jq('.bla').showDialog(1, 2, 3)
+      Traceback (most recent call last):
+      ...
+      TypeError: Argument 1 of method showDialog must have one of the following types: [<type 'str'>, <type 'unicode'>]
+
+      >>> jq('.grep').showDialog('blabla', 'fich')
+
+If you need to use custom methods in all your Ajax views, it will be painfull
 to extend the grammar every time.
 You have some options to solve this.
 
 1) if you use the source code of jquery.pyproxy:
-add a file called my_plugin.py in jquery.pyproxy/jquerypyproxy/plugins.
+add a file called my_plugin.py in jquery.pyproxy/jquery/pyproxy/plugins.
 in this file, describe your plugin with the dictionnary as explained before.
 This dictionnary must be called 'grammar'.
 
@@ -122,10 +242,12 @@ This dictionnary must be called 'grammar'.
 Create a new Python class, subclassing JQueryProxy. Declare a 'grammar' property
 in this object that describes your grammar::
 
-  def MyJqueryProxy(JQueryProxy):
-      grammar = {'showDialog': [[str, unicode],
- 	       		       [str, unicode, int],
-			       [dict, NoneType]]}
+      >>> class MyJQueryProxy(JQueryProxy):
+      ...     grammar = {'showDialog': [[str, unicode],
+      ...                               [str, unicode, int],
+      ...                               [dict, NoneType]]}
+      >>> my_jq = MyJQueryProxy()
+      >>> my_jq('.bla').showDialog('a', 2)
 
 and in your views, use this class instead of the JQueryProxy class.
 
@@ -137,24 +259,53 @@ be integrated in the next release of jquery.pyproxy.
 Limitations
 -----------
 
-jquery.pyproxytries to match as much as possible the jquery syntax so it's
-easy to use existing code etc.
-There is still two (at least) limitations. First, you can not do chained calls,
-like this::
+There is currently three (at least) major limitations.
 
-  jq('#mydiv').css('width': '200px').fadeIn()
+First, you can not do chained calls, like this::
+
+      >>> jq = JQueryProxy()
+      >>> jq('.nice_divs').css({'width': '200px'}).fadeIn(10)
+      Traceback (most recent call last):
+      ...
+      AttributeError: 'NoneType' object has no attribute 'fadeIn'
 
 Second, you can not store your selector, like this::
 
-  mydiv = jq('#mydiv')
-  mydiv.css('width': '200px')
-  mydiv.fadeIn()
+      >>> jq = JQueryProxy()
+      >>> divs = jq('.nice_divs')
+      >>> divs.css({'width': '500px'})
+      >>> divs.fadeIn(10)
+
+It seems to work fine, but if we have a close looks to what has been
+stored by the jq object, we can see that only the last call was
+saved and the call to 'css({width': '500px'})' will never be executed::
+
+      >>> jq.list_calls()
+      ["jq('.nice_divs').fadeIn(10)"]
 
 The proper way to write this code is::
 
-  jq('#mydiv').css('width': '200px')
-  jq('#mydiv').fadeIn()
+      >>> jq = JQueryProxy()
+      >>> jq('.nice_divs').css({'width': '200px'})
+      >>> jq('.nice_divs').fadeIn(10)
 
+Now if we look at what has ben stored by the object, we see all wanted
+calls::
+
+      >>> jq.list_calls()
+      ["jq('.nice_divs').css({'width': '200px'})",
+       "jq('.nice_divs').fadeIn(10)"]
+
+The third one is that the callback are not handled, so you can not use
+something like this::
+
+      >>> jq('.animated').show(10, 'my_callback')
+      Traceback (most recent call last):
+      ...
+      TypeError: Method 'show' takes between 0 and 1 arguments
+
+Even if the jQuery doc tells that the show method can take multiple
+arguments (which is true, but not here).
 
 I use Python but not Django or Plone
 ------------------------------------
@@ -167,8 +318,10 @@ thing this decorator does is to transform the JQueryProxy object
 returned by the function into JSON.
 To make the transformation, this code is enough::
 
-  import simplejson as json
-  jq_to_json = json.dumps(jq.json_serializable())
+      >>> import simplejson as json
+      >>> jq_to_json = json.dumps(jq.json_serializable())
+      >>> jq_to_json
+      '[{"args": [{"width": "200px"}], "call": "css", "selector": ".nice_divs"}, {"args": [10], "call": "fadeIn", "selector": ".nice_divs"}, {"args": [], "call": "show", "selector": ".animated"}]'
 
 Then, the jq_to_json object must be returned according to your
 framework system (for example for Plone we just return it, for Django 
@@ -181,6 +334,16 @@ know so it can be integrated in the next release.
 Compatibility
 -------------
 
-Tested with JQuery 1.2 and 1.4
-Tested with Python 2.4 and 2.6
-Tested on Firefox, Chrome, Safari and IE.
+Tested with:
+
+ - jQuery 1.2 and 1.4
+
+ - Python 2.4 and 2.6
+
+ - Firefox
+
+ - Chrome
+
+ - Safari
+
+ - IE
