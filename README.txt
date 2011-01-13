@@ -154,10 +154,10 @@ You do not get any error on the server side but an error in your
 browser's console. This might be due to the fact that some characters
 are causing problem.
 To solve this, you can use the 'clean_string' method defined in the
-base.py file. It replaces returns, backslashes and tabulations (maybe
+utils.py file. It replaces returns, backslashes and tabulations (maybe
 more to come after)::
 
-      >>> from jquery.pyproxy.base import clean_string
+      >>> from jquery.pyproxy.utils import clean_string
       >>> my_html = "<div id=\"bla\">\n\tHo, hi :)\n</div>"
       >>> clean_string(my_html)
       '<div id="bla">\\nHo, hi :)\\n</div>'

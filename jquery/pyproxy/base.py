@@ -1,33 +1,8 @@
 # Simple library to map JQuery methods in Python code.
 from types import NoneType
-import simplejson as json
 
-import imp
-import os
-
-
-def custom_endswith(str, ext_list):
-    """ Python 2.4 do not accept a list/tuple for
-    endswith. So we build a custom one.
-    """
-    for ext in ext_list:
-        if str.endswith(ext):
-            return True
-
-    return False
-
-# Code taken from here:
-# http://stackoverflow.com/questions/487971/is-there-a-standard-way-to-list-names-of-python-modules-in-a-package
-MODULE_EXTENSIONS = ['.py', '.pyc', '.pyo']
-def package_contents():
-    from jquery.pyproxy import plugins as plugin_module
-    folder = '/'.join(plugin_module.__file__.split('/')[:-1])
-    # Use a set because some may be both source and compiled.
-    return ['.'.join(module.split('.')[:-1])
-            for module in os.listdir(folder)
-            if custom_endswith(module, MODULE_EXTENSIONS) and
-            not module.startswith('__')]
-
+from jquery.pyproxy.utils import package_contents
+from jquery.pyproxy.utils import clean_string as utils_clean_strings
 
 class JQueryCommand(object):
     """ An object storing JQuery commands done.
@@ -107,7 +82,11 @@ class JQueryCommand(object):
         self.args = list(args)
 
     def __str__(self):
-        return '%s %s' % (self.method, self.args)
+        return '%s(%s)' % (self.method,
+                           ', '.join([str(a) for a in self.args]))
+
+    def __repr__(self):
+        return str(self)
 
 class JQueryProxy(object):
     grammar = {}
@@ -133,6 +112,13 @@ class JQueryProxy(object):
                 continue
             
             self.grammar[meth] = grammar[meth]
+
+    def list_calls(self):
+        """ Returns the list of calls that have been done.
+        """
+        return ["jq('%s').%s" % (self.selectors[i],
+                                 self.calls[i])
+                for i in range(0, len(self.selectors))]
 
     def __call__(self, selector = ''):
         self.selectors.append(selector)
@@ -174,17 +160,9 @@ class JQueryProxy(object):
             res.append(command)
         return res
 
-def clean_string(str):
-    """ Removes characters that can cause Javascript evaluation problems.
-    We might use regexp if the list grows too much, but for the moment
-    simple replace are okay.
-    """
-    replacements = {'\n': '\\n',
-                    '\r': '\\r',
-                    '\t': '',
-                    '\'': '\\\''}
-
-    for key in replacements:
-        str = str.replace(key, replacements[key])
-
-    return str
+def clean_string(s):
+    import warnings
+    warnings.warn(
+        'clean_string will be definitelly removed from base in version 1.0. '
+        'Use jquery.pyproxy.utils instead',
+        DeprecationWarning)
