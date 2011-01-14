@@ -26,7 +26,7 @@ class JQueryProxy(JQueryProxyBase):
         """ 
 
         # We hide the existing ones.
-        self('dl .portalMessage').hide() 
+        self('dl.portalMessage').hide()
 
         # We delete our portal message.
         self('#jq_portal_msg').remove() 

@@ -30,6 +30,7 @@ setup(name='jquery.pyproxy',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'simplejson',
       ],
       entry_points="""
       [z3c.autoinclude.plugin]

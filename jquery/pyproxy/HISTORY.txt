@@ -4,6 +4,28 @@ History of jquery.pyproxy
 0.3 (unreleased)
 ----------------
 
+- finally added tests for the base python code. Tests for the jquery
+  plugin and customized Plone.Django object to come. [vincent+maurits]
+
+- IMPORTANT: the 'grammar' attribute has been renamed 'base_grammar'
+  attribute. If you created sub-classes of the JQueryProxy object,
+  update them. Using the 'grammar' attribute caused a problem as it
+  was not initialized in the __init__ method, the value was spread to
+  every instances of the JQueryProxy object. [vincent]
+
+- added a 'batch' method on the JueryProxy object to process multiple
+  entries. It should be used to replace show_errors and
+  hide_errors. [vincent]
+
+- deprecated jq.show_errors and jq.hide_errors as it was based
+  on Plone CSS classes. [vincent]
+
+- moved 'clean_string', 'package_contents' and 'custom_endswith' to
+  utils. [vincent]
+
+- small bugfix in Plone version to hide the previous portal
+  messages. [vincent]
+
 - updated __init__.py to declare the namespace to avoid problems with
   setuptools 0.7. [vincent]
 

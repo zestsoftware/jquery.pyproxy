@@ -2,7 +2,7 @@
 from types import NoneType
 
 from jquery.pyproxy.utils import package_contents
-from jquery.pyproxy.utils import clean_string as utils_clean_strings
+from jquery.pyproxy.utils import clean_string as utils_clean_string
 
 class JQueryCommand(object):
     """ An object storing JQuery commands done.
@@ -23,8 +23,7 @@ class JQueryCommand(object):
             self.method = name
             return self.call
 
-        object.__getattribute__(self, name)
-
+        return object.__getattribute__(self, name)
 
     def call(self, *args, **kwargs):
         """ Check the arguments provided are corrects toward grammar
@@ -82,18 +81,34 @@ class JQueryCommand(object):
         self.args = list(args)
 
     def __str__(self):
-        return '%s(%s)' % (self.method,
-                           ', '.join([str(a) for a in self.args]))
+        """ Returns the method called and the arguments used.
 
+        >>> jq = JQueryProxy()
+        >>> jq('a').css({'text-decoration': 'underline'})
+        >>> str(jq.calls[-1])
+        "css({'text-decoration': 'underline'})"
+        """
+        return '%s(%s)' % (self.method,
+                           str(self.args)[1:-1])
     def __repr__(self):
+        """ See __str__
+
+        >>> jq = JQueryProxy()
+        >>> jq('a').css({'text-decoration': 'underline'})
+        >>> jq.calls[-1]
+        css({'text-decoration': 'underline'})
+        """
         return str(self)
 
 class JQueryProxy(object):
-    grammar = {}
+    base_grammar = {}
 
     def __init__(self):
         self.selectors = []
         self.calls = []
+        self.grammar = {}
+
+        self.extend_grammar(self.base_grammar)
 
         # We build the grammar from the plugins.
         plugins = package_contents()
@@ -101,11 +116,48 @@ class JQueryProxy(object):
             try:
                 exec 'from jquery.pyproxy.plugins.%s import grammar' % plugin
                 self.extend_grammar(grammar)
-                    
+
             except ImportError:
+                # This should only happen when a plugin does not define a
+                # 'grammar' dictionnary.
                 pass
 
     def extend_grammar(self, grammar):
+        """ Adds new elements to the known grammar of the object.
+
+        >>> jq = JQueryProxy()
+        >>> sorted(jq.grammar.keys())
+        ['addClass', 'after', 'animate', 'append',
+         'appendTo', 'attr', 'before', 'css', 'detach',
+         'empty', 'fadeIn', 'fadeOut', 'fadeTo', 'hide',
+         'html', 'insertAfter', 'insertBefore', 'prepend',
+         'prependTo', 'remove', 'removeAttr', 'removeClass',
+         'replaceAll', 'replaceWith', 'show', 'slideDown',
+         'slideToggle', 'slideUp', 'text', 'toggle', 'toggleClass',
+         'unwrap', 'wrap', 'wrapAll', 'wrapInner']
+
+        >>> jq.extend_grammar({'a_new_method': []})
+        >>> sorted(jq.grammar.keys())
+        ['a_new_method', 'addClass', 'after', 'animate', 'append',
+         'appendTo', 'attr', 'before', 'css', 'detach', 'empty', 'fadeIn',
+         'fadeOut', 'fadeTo', 'hide', 'html', 'insertAfter', 'insertBefore',
+         'prepend', 'prependTo', 'remove', 'removeAttr', 'removeClass',
+         'replaceAll', 'replaceWith', 'show', 'slideDown', 'slideToggle',
+         'slideUp', 'text', 'toggle', 'toggleClass', 'unwrap', 'wrap',
+         'wrapAll', 'wrapInner']
+
+        If a method already exists in the grammar, it is not overriden.
+        >>> jq.grammar['animate']
+        [<type 'dict'>,
+         [<type 'str'>, <type 'unicode'>, <type 'int'>, <type 'NoneType'>],
+         [<type 'str'>, <type 'NoneType'>]]
+
+        >>> jq.extend_grammar({'animate': [[int], [str]]})
+        >>> jq.grammar['animate']
+        [<type 'dict'>,
+         [<type 'str'>, <type 'unicode'>, <type 'int'>, <type 'NoneType'>],
+         [<type 'str'>, <type 'NoneType'>]]
+         """
         for meth in grammar:
             if meth in self.grammar:
                 # We try to avoid clashes.
@@ -115,6 +167,13 @@ class JQueryProxy(object):
 
     def list_calls(self):
         """ Returns the list of calls that have been done.
+
+        >>> jq = JQueryProxy()
+        >>> jq('.kikoo').addClass('lolilol')
+        >>> jq('.kikoo').show()
+        >>> jq.list_calls()
+        ["jq('.kikoo').addClass('lolilol')",
+         "jq('.kikoo').show()"]
         """
         return ["jq('%s').%s" % (self.selectors[i],
                                  self.calls[i])
@@ -126,17 +185,84 @@ class JQueryProxy(object):
         self.calls.append(JQueryCommand(self.grammar))
         return self.calls[-1]
 
+    def batch(self, selectors, meth, args, prefix='', substitution='%s'):
+        """ Calls self(selector).meth(args) for each selectors
+        in the selectors list.
+
+        >>> jq = JQueryProxy()
+        >>> my_errors = ['email', 'title', 'text']
+
+        >>> jq.batch(my_errors, 'addClass', ['error'])
+        >>> jq.list_calls()[-3:]
+        ["jq('email').addClass('error')",
+         "jq('title').addClass('error')",
+         "jq('text').addClass('error')"]
+
+        If provided, prefix the selectors with 'prefix' and uses the substitution
+        string.
+        >>> jq.batch(my_errors, 'addClass', ['error'], prefix='#')
+        >>> jq.list_calls()[-3:]
+        ["jq('#email').addClass('error')",
+         "jq('#title').addClass('error')",
+         "jq('#text').addClass('error')"]
+
+        >>> jq.batch(my_errors, 'addClass', ['error'], substitution='#%s_error')
+        >>> jq.list_calls()[-3:]
+        ["jq('#email_error').addClass('error')",
+         "jq('#title_error').addClass('error')",
+         "jq('#text_error').addClass('error')"]
+
+
+        >>> jq.batch(my_errors, 'addClass', ['error'], prefix='#', substitution='%s_error')
+        >>> jq.list_calls()[-3:]
+        ["jq('#email_error').addClass('error')",
+         "jq('#title_error').addClass('error')",
+         "jq('#text_error').addClass('error')"]
+        """
+        for selector in selectors:
+            selector = prefix + substitution % selector
+            getattr(self(selector), meth)(*args)
+
     def hide_errors(self, errors):
         """ Take a list of ids, removes the 'errormessage' class
         and adds the 'dont-show' one.
+        It has been deprecated as its mainly based on Plone CSS classes,
+        the batch method should be used to replace it.
+
+        >>> jq = JQueryProxy()
+        >>> jq.hide_errors(['title', 'email'])
+        >>> jq.list_calls()
+        ["jq('#title').removeClass('errormessage')",
+         "jq('#title').addClass('dont-show')",
+         "jq('#email').removeClass('errormessage')",
+         "jq('#email').addClass('dont-show')"]
         """
+        import warnings
+        warnings.warn(
+            'JQueryProxy.hide_errors will be removed in version 1.0',
+        DeprecationWarning)
+
         for err in errors:
             self('#' + err).removeClass('errormessage')
             self('#' + err).addClass('dont-show')
 
     def show_errors(self, errors):
-        """ Does the opposite of hide_errors.
+        """ Does the opposite of hide_errors and is deprecated for the
+        same reasons.
+
+        >>> jq = JQueryProxy()
+        >>> jq.show_errors(['title', 'email'])
+        >>> jq.list_calls()
+        ["jq('#title').addClass('errormessage')",
+         "jq('#title').removeClass('dont-show')",
+         "jq('#email').addClass('errormessage')",
+         "jq('#email').removeClass('dont-show')"]
         """
+        import warnings
+        warnings.warn(
+            'JQueryProxy.show_errors will be removed in version 1.0',
+        DeprecationWarning)
+
         for err in errors:
             self('#' + err).addClass('errormessage')
             self('#' + err).removeClass('dont-show')
@@ -144,12 +270,16 @@ class JQueryProxy(object):
     def json_serializable(self):
         """ Returns content as simple types so we can use simplejson.
 
-        Results looks like this:
-        [{'selector': '#my_id',
-          'command': 'html',
-          'args': ['blabla']},
-          ...
-        ]
+        >>> jq = JQueryProxy()
+        >>> jq('.portal_message').hide()
+        >>> jq('.to_animate').animate({'width': '500px',
+        ...                            'height': '200px',
+        ...                            'top': '100px'},
+        ...                           42,
+        ...                           'blabla')
+        >>> jq.json_serializable()
+        [{'args': [], 'call': 'hide', 'selector': '.portal_message'},
+         {'args': [{'width': '500px', 'top': '100px', 'height': '200px'}, 42, 'blabla'], 'call': 'animate', 'selector': '.to_animate'}]
         """
         res = []
         for i in range(0, len(self.selectors)):
@@ -161,8 +291,15 @@ class JQueryProxy(object):
         return res
 
 def clean_string(s):
+    """ Deprecated as it has been moved to utils.
+
+    Just a test to get closer to the 100% of coverage.
+    >>> clean_string('Hello')
+    'Hello'
+    """
     import warnings
     warnings.warn(
         'clean_string will be definitelly removed from base in version 1.0. '
         'Use jquery.pyproxy.utils instead',
         DeprecationWarning)
+    return utils_clean_string(s)
