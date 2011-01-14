@@ -16,4 +16,20 @@
 	      id="++resource++jquery.pyproxy.js"
 	      inline="False"
               insert-after="jquery-integration.js" />
+  <javascript cacheable="True"
+	      compression="none"
+	      cookable="False"
+	      enabled="False"
+	      expression=""
+	      id="++resource++jquery.pyproxy.spinner.js"
+	      inline="False"
+              insert-after="jquery-integration.js" />
+  <javascript cacheable="True"
+	      compression="none"
+	      cookable="False"
+	      enabled="True"
+	      expression=""
+	      id="++resource++jquery.pyproxy.spinner.min.js"
+	      inline="False"
+              insert-after="jquery-integration.js" />
 </object>

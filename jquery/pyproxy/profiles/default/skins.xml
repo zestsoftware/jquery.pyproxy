@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<object name="portal_skins">
+ <object name="pyproxy"
+    meta_type="Filesystem Directory View"
+    directory="jquery.pyproxy:skins/pyproxy"/>
+
+ <skin-path name="*">
+  <layer name="pyproxy" />
+ </skin-path>
+</object>

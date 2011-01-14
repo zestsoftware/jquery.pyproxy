@@ -18,15 +18,28 @@ Add jquery.pyproxy to your buildout eggs and run the buildout, if you
 do not use buildout, you can easy_install jquery.pyproxy (or do as you
 usually do with other products).
 
-In Plone, go to the quickinstaller and install jquery.pyproxy. That
-will ensure that you have the Javascript library installed.
+In Plone, go to the quickinstaller and install jquery.pyproxy. That's
+all, happy Plone users can now skip to 'Simple example'.
 
-In Django, you should also add 'django-appmedia' to you buildout eggs
-and 'appmedia' to the list of installed apps. Run buildout, then run
+In Django, you should also add ``django-appmedia`` to you buildout eggs
+and ``appmedia`` to the list of installed apps. Run buildout, then run
 bin/django symlinkmedia.
 Now in your templates, add::
 
   <script type="text/javascript" src="{{MEDIA_URL}}/pyproxy/jquery.pyproxy.min.js"></script>
+
+If you want to have a spinner automatically shown when a request is
+done, you can also add in your header::
+
+  <script type="text/javascript" src="{{MEDIA_URL}}/pyproxy/jquery.pyproxy.spinner.min.js"></script>
+  <link rel="stylesheet" href="{{MEDIA_URL}}/pyproxy/jquery.pyproxy.spinner.css" type="text/css" media="screen">
+
+You need to have a ``pyproxy_spinner.gif`` image available at the root of
+the site. If not (or if your media files are hosted on a different
+subdomain), you should declare a javascrit variable called
+``pyproxy_spinner_location`` that points to the URL of the file. The
+declaration should be done before including the
+``jquery.pyproxy.spinner.js`` file.
 
 If you do not want to use app_media, you can download the javascript
 library from github
@@ -34,6 +47,7 @@ library from github
 - please ensure to match the egg version and js version) and install
 it to your media folder. You can then include it to your 
 templates.
+
 
 Simple example
 --------------
@@ -68,6 +82,8 @@ First, you create a view that will manage the information sent by the user
       ...
       # We display a success message.
       jq('#my_success_message').show()
+
+      # If the JQueryProxy object is not returned, nothing happens.
       return jq
 
 and finally, bind a jquery.pyproxy action to the button
@@ -104,7 +120,7 @@ identifier::
       ...
       SyntaxError: invalid syntax
 
-So in our examples we declare our object as 'jq', which is the classic
+So in our examples we declare our object as ``jq``, which is the classic
 way in Plone to name the jQuery object::
 
       >>> jq = JQueryProxy()
@@ -147,7 +163,7 @@ server logs)::
       ...
       TypeError: Argument 2 of method fadeTo must be: <type 'int'>
 
-If you need to process a list of selectors, you can use the 'batch'
+If you need to process a list of selectors, you can use the ``batch``
 method of the JQueryObject. It takes five arguments:
 
  - a list of selectors
@@ -180,8 +196,8 @@ You do not get any error on the server side but an error in your
 browser's console. This might be due to the fact that some characters
 are causing problem.
 To solve this, you can use the 'clean_string' method defined in the
-utils.py file. It replaces returns, backslashes and tabulations (maybe
-more to come after)::
+``utils`` module. It replaces returns, backslashes and tabulations
+(maybe more to come after)::
 
       >>> from jquery.pyproxy.utils import clean_string
       >>> my_html = "<div id=\"bla\">\n\tHo, hi :)\n</div>"
@@ -189,7 +205,7 @@ more to come after)::
       '<div id="bla">\\nHo, hi :)\\n</div>'
 
 When you need to have a clear overview of which calls have been done
-by the jq object, you can use the 'list_calls' method::
+by the jq object, you can use the ``list_calls`` method::
 
       >>> jq.list_calls()
       ["jq('#error_msg').html('Errors have been found, please correct them')",
@@ -211,7 +227,7 @@ Extending JQuery proxy
 
 If you want to be able to use jQuery methods that are not known by
 default, you have to extend the list of methods known by JQueryPyproxy.
-In our example, we'll consider that you want to use a 'showDialog'
+In our example, we'll consider that you want to use a ``showDialog``
 method from an extra-plugin.
 By default, it does not works (which is logical as pyproxy does not
 have a clue of which jQuery plugins you are using)::
@@ -223,7 +239,7 @@ have a clue of which jQuery plugins you are using)::
 
 To be able to use the method, you need to define the list of extra
 methods you want to use and the parameters expected.
-Here we only define the 'showDialog' method, taking three parameters
+Here we only define the ``showDialog`` method, taking three parameters
 (the first one is a string or unicode, the second one an int, a string
 or a unicode and the last one a optional dictionnary)::
 
@@ -232,7 +248,7 @@ or a unicode and the last one a optional dictionnary)::
       ...                             [str, unicode, int],
       ...                             [dict, NoneType]]}
 
-Then, you can use the 'extend_grammar' method so your methods are recognized::
+Then, you can use the ``extend_grammar`` method so your methods are recognized::
 
       >>> jq.extend_grammar(my_plugin)
       >>> 'showDialog' in jq.grammar
@@ -243,7 +259,7 @@ Then, you can use the 'extend_grammar' method so your methods are recognized::
        [<type 'dict'>, <type 'NoneType'>]]
       >>> jq('#my_dialog').showDialog('some text', 42, dict(opt1 = 2, opt2 = False))
 
-And of course it respect the grammar you defined::
+And of course it respects the grammar you defined::
       >>> jq('.bla').showDialog()
       Traceback (most recent call last):
       ...
@@ -261,13 +277,13 @@ to extend the grammar every time.
 You have some options to solve this.
 
 1) if you use the source code of jquery.pyproxy:
-add a file called my_plugin.py in jquery.pyproxy/jquery/pyproxy/plugins.
-in this file, describe your plugin with the dictionnary as explained before.
-This dictionnary must be called 'grammar'.
+add a file called ``my_plugin.py`` in jquery.pyproxy/jquery/pyproxy/plugins.
+In this file, describe your plugin with the dictionnary as explained before.
+This dictionnary must be called ``grammar``.
 
 2) you do not use the source, just the egg.
-Create a new Python class, subclassing JQueryProxy. Declare a 'grammar' property
-in this object that describes your grammar::
+Create a new Python class, subclassing JQueryProxy. Declare a
+``base_grammar`` property in this object that describes your grammar::
 
       >>> class MyJQueryProxy(JQueryProxy):
       ...     base_grammar = {'showDialog': [[str, unicode],
