@@ -17,6 +17,6 @@ __test__ = {
         optionflags=OPTIONFLAGS),
 
     'readme': doctest.testfile(
-        "../../../README.txt",
+        "../../../README.rst.txt",
         optionflags=OPTIONFLAGS),
     }

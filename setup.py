@@ -10,7 +10,7 @@ def get_file_contents(filename):
 
 version = get_file_contents('jquery/pyproxy/version.txt')
 history = get_file_contents('jquery/pyproxy/HISTORY.txt')
-readme = get_file_contents('README.txt')
+readme = get_file_contents('README.rst.txt')
 long = "%s\n\n\n%s" % (readme, history)
 
 setup(name='jquery.pyproxy',
