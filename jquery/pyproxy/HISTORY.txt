@@ -5,7 +5,7 @@ History of jquery.pyproxy
 ----------------
 
 - added extra JS/CSS file to show a spinner when a request is
-  done. [vincent]
+  done. The spinner image was generated using ajaxload.info/ [vincent] 
 
 - finally added tests for the base python code. Tests for the jquery
   plugin and customized Plone.Django object to come. [vincent+maurits]
