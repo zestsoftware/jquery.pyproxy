@@ -17,7 +17,7 @@ def test_suite():
             optionflags=OPTIONFLAGS),
 
         ZopeDocFileSuite(
-            '../../README.rst.txt',
+            '../../README.rst',
             package='jquery.pyproxy',
             optionflags=OPTIONFLAGS),
         ])
