@@ -4,6 +4,9 @@ Changelog
 0.3 (unreleased)
 ----------------
 
+- extracted sub-methods from the jquery plugin to easy testing. All
+  are prefixed with pyproxy_ to avoid name conflicts. [vincent]
+
 - added roadmap. [vincent]
 
 - added extra JS/CSS file to show a spinner when a request is

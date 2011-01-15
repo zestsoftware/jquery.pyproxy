@@ -13,7 +13,7 @@ What should be coming for the next releases.
  - tests for the Django specifics (there should only be the @jquery
    decoarator).
 
- - extract sub functions to ease unit testing.
+ - extract sub functions to ease unit testing. [done]
 
  - tests for the jQuery plugin itself.
 
