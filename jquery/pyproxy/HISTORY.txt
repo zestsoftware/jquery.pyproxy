@@ -1,8 +1,10 @@
-History of jquery.pyproxy
-=========================
+Changelog
+=========
 
 0.3 (unreleased)
 ----------------
+
+- added roadmap. [vincent]
 
 - added extra JS/CSS file to show a spinner when a request is
   done. The spinner image was generated using ajaxload.info/ [vincent] 
