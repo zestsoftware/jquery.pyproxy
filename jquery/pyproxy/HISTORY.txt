@@ -4,6 +4,10 @@ Changelog
 0.3 (unreleased)
 ----------------
 
+- removed the 'eval()' calls in process_call. Also removed
+  arg_to_string not needed anymore and disabled 'clean_string' which
+  is also not needed anymore. [vincent]
+
 - extracted sub-methods from the jquery plugin to easy testing. All
   are prefixed with pyproxy_ to avoid name conflicts. [vincent]
 

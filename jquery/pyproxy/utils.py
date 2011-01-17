@@ -46,21 +46,6 @@ def custom_endswith(s, ext):
             
     return False
 
-def clean_string(str):
-    """ Removes characters that can cause Javascript evaluation problems.
-    We might use regexp if the list grows too much, but for the moment
-    simple replace are okay.
-    """
-    replacements = {'\n': '\\n',
-                    '\r': '\\r',
-                    '\t': '',
-                    '\'': '\\\''}
-
-    for key in replacements:
-        str = str.replace(key, replacements[key])
-
-    return str
-
 # Code taken from here:
 # http://stackoverflow.com/questions/487971/is-there-a-standard-way-to-list-names-of-python-modules-in-a-package
 MODULE_EXTENSIONS = ['.py', '.pyc', '.pyo']

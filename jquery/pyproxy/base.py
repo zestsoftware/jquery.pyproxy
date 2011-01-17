@@ -2,7 +2,6 @@
 from types import NoneType
 
 from jquery.pyproxy.utils import package_contents
-from jquery.pyproxy.utils import clean_string as utils_clean_string
 
 class JQueryCommand(object):
     """ An object storing JQuery commands done.
@@ -299,7 +298,7 @@ def clean_string(s):
     """
     import warnings
     warnings.warn(
-        'clean_string will be definitelly removed from base in version 1.0. '
-        'Use jquery.pyproxy.utils instead',
+        'Clean string is not needed anymore, since eval() has been removed' + \
+        ' on JS side',
         DeprecationWarning)
-    return utils_clean_string(s)
+    return s

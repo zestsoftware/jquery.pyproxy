@@ -54,56 +54,14 @@ var pyproxy_debug_mode = false;
 	return dict;
     };
 
-    /* Transforms an argument from the JSon response to a string.
-     * For example, this list: ['a', 2, {'z': 'x'}] will be transformed to
-     * "'a', 2, {'z': 'x'}"
-     * Yes it looks almost the same.
-     */
-    $.pyproxy_arg_to_string = function(arg) {
-	if (typeof(arg) == 'string') {
-	    res = '\'' + arg + '\'';
-	} else if (typeof(arg) == 'number') {
-	    res = arg;
-	} else {
-	    /* If it's not a String, not an integer, must be a dict.
-	     * Yes it's a huge assumption, but there is not that much 
-	     * possible parameter type in JQuery.
-	     */
-	    res = '{';
-	    
-	    for (key in arg) {
-		res += '\'' + key + '\': ' + $.pyproxy_arg_to_string(arg[key]) + ', ';
-	    }
-	    
-	    /* IE do not like dictionnaries written like this {'a': 2,}, so
-	       we have to remove the last comma. */
-	    res = res.slice(0, -2) + '}';
-	}
-	
-	return res;
-    }
-
     /* Process the data  */
     $.pyproxy_process_data = function(data, callback) {
 	debug('Processing data ...');
 	for (i=0; i < data.length; i++) {
 	    command = data[i];
-	    
-	    ex = '$(\'' + command.selector + '\').' + command.call + '(';
-	    
-	    for (j = 0; j < command.args.length; j++) {
-		arg = command.args[j];
-		
-		ex += $.pyproxy_arg_to_string(arg);
-		if (j+1 < command.args.length) {
-		    ex += ', ';
-		}
-	    }
-	    
-	    ex += ')';
-	    
-	    debug(ex);
-	    eval(ex);
+	    selector = $(command.selector)
+	    meth = $(command.selector)[command.call]
+	    meth.apply(selector, command.args);
 	}
 	
 	if (typeof(callback) == 'function') {
@@ -143,7 +101,6 @@ var pyproxy_debug_mode = false;
 		       },
 		       dataType: "json"});
     };
-
 
     /*
      * $('#something').pyproxy(event, url, [data, [callback]])
