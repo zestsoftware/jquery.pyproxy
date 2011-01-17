@@ -4,6 +4,11 @@ Changelog
 0.3 (unreleased)
 ----------------
 
+- you can now specify a callback without specifying a form to
+  send. [vincent]
+
+- added tests for the jQuery plugin. [vincent]
+
 - removed the 'eval()' calls in process_call. Also removed
   arg_to_string not needed anymore and disabled 'clean_string' which
   is also not needed anymore. [vincent]

@@ -29,14 +29,17 @@
       file="media/jquery.pyproxy.spinner.min.js"
       />
 
-  <!-- And the stuling for the spinner. -->
+  <!-- And the styling for the spinner. -->
   <browser:resource
       name="jquery.pyproxy.spinner.css"
       file="media/jquery.pyproxy.spinner.css"
       />
 
   <cmf:registerDirectory name="pyproxy"/>
+
+  <!-- This should be commented on production -->
   <cmf:registerDirectory name="pyproxy_tests"/>
+  <include package=".samples.plone" />
 
   <!-- -*- extra stuff goes here -*- -->
   <genericsetup:registerProfile

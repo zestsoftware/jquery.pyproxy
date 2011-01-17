@@ -93,6 +93,9 @@ var pyproxy_debug_mode = false;
 	else if (typeof(data) == 'string') {
 	    form_id = data;
 	    data = $.pyproxy_form_to_dict(form_id);
+	} else if (typeof(data) == 'function') {
+	    callback = data;
+	    data = {};
 	}
 
 	return $.ajax({type: 'POST',

@@ -353,7 +353,12 @@
       </form>
 
       <h1>Container for created data</h1>
-      <div id="pyproxy_tests_extras"></div>
+      <div id="pyproxy_tests_extras">
+      </div>
+
+      <h1>Container for returned form content</h1>
+      <div id="pyproxy_tests_form_holder">
+      </div>
     </div>
   </body>
 </html>
