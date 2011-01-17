@@ -1,0 +1,356 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      xml:lang="en"
+      lang="en"
+      i18n:domain="jquery.pyproxy">
+
+  <metal:javascript_head fill-slot="javascript_head_slot">
+    <tal:block tal:define="custom_jquery request/form/jquery_version|nothing;">
+      <tal:block tal:condition="custom_jquery">
+        <script type="text/javascript"
+                tal:attributes="src python: 'http://ajax.googleapis.com/ajax/libs/jquery/%s/jquery.min.js' % custom_jquery">
+        </script>
+        <script type="text/javascript"
+                src="++resource++jquery.pyproxy.js">
+        </script>
+        <script type="text/javascript">
+          jq1 = jQuery;
+        </script>
+      </tal:block>
+      <tal:block tal:condition="not: custom_jquery">
+        <script type="text/javascript">
+          jq1 = jq;
+        </script>
+      </tal:block>
+    </tal:block>
+
+    <script type="text/javascript"
+            src="qunit.js">
+    </script>
+    <script type="text/javascript"
+            src="pyproxy_tests.js">
+    </script>
+  </metal:javascript_head>
+
+
+  <metal:styleslot fill-slot="style_slot">
+    <link rel="stylesheet" href="qunit.css" type="text/css" media="screen" />
+  </metal:styleslot>
+
+  <metal:block fill-slot="top_slot"
+               tal:define="dummy python:request.set('disable_border', 0)" />
+
+  <body>
+    <div metal:fill-slot="main">
+      <h1 id="qunit-header">jQuery.pyproxy tests</h1>
+      <h2 id="qunit-banner"></h2>
+      <div id="qunit-testrunner-toolbar"></div>
+      <h2 id="qunit-userAgent"></h2>
+      <ol id="qunit-tests"></ol>
+      <div id="qunit-fixture">test markup, will be hidden</div>
+
+      <h1>A form sample</h1>
+      <form id="qunit_empty_form">
+      </form>
+
+      <form id="qunit_form_sample">
+        <fieldset id="qunit_form_sample_empty_elements">
+          <legend>Empty elements</legend>
+
+          <div id="field_empty_hidden">
+            <ul class="error_holder"></ul>
+            <label for="empty_hidden">An empty hidden field - yeah you can not see it, it's hidden</label>
+            <input type="hidden"
+                   id="empty_hidden"
+                   name="empty_hidden"
+                   value="" />
+          </div>
+
+          <div id="field_empty_text">
+            <label for="empty_text">A text field</label>
+            <ul class="error_holder"></ul>
+            <input type="text"
+                   id="empty_text"
+                   name="empty_text"
+                   value="" />
+          </div>
+
+          <div id="field_empty_password">
+            <label for="empty_text">A password field</label>
+            <ul class="error_holder"></ul>
+            <input type="password"
+                   id="empty_password"
+                   name="empty_password"
+                   value="" />
+          </div>
+
+          <div id="field_empty_textarea">
+            <label for="empty_text">A textarea field</label>
+            <ul class="error_holder"></ul>
+            <textarea name="empty_textarea"
+                      id="empty_textarea"></textarea>
+          </div>
+
+          <div id="field_empty_checkbox">
+            <label>A checkbox not selected</label>
+            <ul class="error_holder"></ul>
+            <ul>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="empty_checkbox"
+                         value="1" />Choice 1</label>
+              </li>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="empty_checkbox"
+                         value="2" />Choice 2</label>
+              </li>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="empty_checkbox"
+                         value="3" />Choice 3</label>
+              </li>
+            </ul>
+          </div>
+
+          <div id="field_empty_radio">
+            <label>A radio not selected</label>
+            <ul class="error_holder"></ul>
+            <ul>
+              <li>
+                <label>
+                  <input type="radio"
+                         name="empty_radio"
+                         value="1" />Choice 1</label>
+              </li>
+              <li>
+                <label>
+                  <input type="radio"
+                         name="empty_radio"
+                         value="2" />Choice 2</label>
+              </li>
+              <li>
+                <label>
+                  <input type="radio"
+                         name="empty_radio"
+                         value="3" />Choice 3</label>
+              </li>
+            </ul>
+          </div>
+
+          <div id="field_empty_select">
+            <label for="empty_select">An empty select</label>
+            <p class="discreet">
+              The principle of the select input it to have at least one element
+              selected, so we use one with no options to simulate.
+            </p>
+            <ul class="error_holder"></ul>
+            <select id="empty_select"
+                    name="empty_select">
+            </select>
+          </div>
+
+          <div id="field_empty_multi_select">
+            <label for="empty_multi_select">A multi select with no value selected</label>
+            <ul class="error_holder"></ul>
+            <select id="empty_multi_select"
+                    multiple="multiple"
+                    size="5"
+                    name="empty_multi_select">
+              <option value="1">First choice</option>
+              <option value="2">Second choice</option>
+              <option value="3">Third choice</option>
+            </select>
+          </div>
+
+          <div id="field_empty_submit">
+            <label for="empty_submit">An empty submit</label>
+            <ul class="error_holder"></ul>
+            <input type="submit"
+                   id="empty_submit"
+                   name="empty_submit"
+                   value="" />
+          </div>
+        </fieldset>
+
+        <fieldset id="qunit_form_sample_valued_elements">
+          <legend>Valued elements</legend>
+
+          <div id="field_valued_hidden">
+            <ul class="error_holder"></ul>
+            <label for="valued_hidden">An valued hidden field - yeah you can not see it, it's hidden</label>
+            <input type="hidden"
+                   id="valued_hidden"
+                   name="valued_hidden"
+                   value="hidden_value" />
+          </div>
+
+          <div id="field_valued_text">
+            <label for="valued_text">A text field</label>
+            <ul class="error_holder"></ul>
+            <input type="text"
+                   id="valued_text"
+                   name="valued_text"
+                   value="I'm a text field" />
+          </div>
+
+          <div id="field_valued_password">
+            <label for="valued_text">A password field</label>
+            <ul class="error_holder"></ul>
+            <input type="password"
+                   id="valued_password"
+                   name="valued_password"
+                   value="mys3cr3tpassword" />
+          </div>
+
+          <div id="field_valued_textarea">
+            <label for="valued_text">A textarea field</label>
+            <ul class="error_holder"></ul>
+            <textarea name="valued_textarea"
+                      id="valued_textarea">There can be a lot in here</textarea>
+          </div>
+
+          <div id="field_valued_checkbox">
+            <label>A checkbox with one element selected</label>
+            <ul class="error_holder"></ul>
+            <ul>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="valued_checkbox"
+                         value="1" />Choice 1</label>
+              </li>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="valued_checkbox"
+                         checked="checked"
+                         value="2" />Choice 2</label>
+              </li>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="valued_checkbox"
+                         value="3" />Choice 3</label>
+              </li>
+            </ul>
+          </div>
+
+          <div id="field_two_valued_checkbox">
+            <label>A checkbox with two element selected</label>
+            <ul class="error_holder"></ul>
+            <ul>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="two_valued_checkbox"
+                         value="1" />Choice 1</label>
+              </li>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="two_valued_checkbox"
+                         checked="checked"
+                         value="2" />Choice 2</label>
+              </li>
+              <li>
+                <label>
+                  <input type="checkbox"
+                         name="two_valued_checkbox"
+                         checked="checked"
+                         value="3" />Choice 3</label>
+              </li>
+            </ul>
+          </div>
+
+          <div id="field_valued_radio">
+            <label>A radio field</label>
+            <ul class="error_holder"></ul>
+            <ul>
+              <li>
+                <label>
+                  <input type="radio"
+                         name="valued_radio"
+                         value="1" />Choice 1</label>
+              </li>
+              <li>
+                <label>
+                  <input type="radio"
+                         name="valued_radio"
+                         value="2" />Choice 2</label>
+              </li>
+              <li>
+                <label>
+                  <input type="radio"
+                         name="valued_radio"
+                         checked="checked"
+                         value="3" />Choice 3</label>
+              </li>
+            </ul>
+          </div>
+
+          <div id="field_valued_select">
+            <label for="valued_select">A valued select</label>
+            <ul class="error_holder"></ul>
+            <select id="valued_select"
+                    name="valued_select">
+              <option value="1">First choice</option>
+              <option value="2">Second choice</option>
+              <option value="3" selected="selected">Third choice</option>
+              <option value="4">Fourth choice</option>
+            </select>
+          </div>
+
+          <div id="field_valued_multi_select">
+            <label for="valued_multi_select">A multi select with no value selected</label>
+            <ul class="error_holder"></ul>
+            <select id="valued_multi_select"
+                    multiple="multiple"
+                    size="5"
+                    name="valued_multi_select">
+              <option value="1" selected="selected">First choice</option>
+              <option value="2">Second choice</option>
+              <option value="3" selected="selected">Third choice</option>
+            </select>
+          </div>
+
+          <div id="field_valued_submit">
+            <label for="valued_submit">An valued submit</label>
+            <ul class="error_holder"></ul>
+            <input type="submit"
+                   id="valued_submit"
+                   name="valued_submit"
+                   value="To infinity and beyond" />
+          </div>
+        </fieldset>
+
+        <fieldset id="qunit_form_sample_ignored_elements">
+          <legend>Ignored elements</legend>
+          
+          <div id="field_not_ignored_submit">
+            <label for="not_ignored_submit">The main submit</label>
+            <input type="submit"
+                   id="not_ignored_submit"
+                   name="not_ignored_submit"
+                   value="Submit" />
+          </div>
+
+          <div id="field_ignored_submit">
+            <label for="ignored_submit">The cancel (and ignored) submit</label>
+            <input type="submit"
+                   class="pyproxyIgnore"
+                   id="ignored_submit"
+                   name="ignored_submit"
+                   value="Cancel" />
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </body>
+</html>

@@ -36,6 +36,7 @@
       />
 
   <cmf:registerDirectory name="pyproxy"/>
+  <cmf:registerDirectory name="pyproxy_tests"/>
 
   <!-- -*- extra stuff goes here -*- -->
   <genericsetup:registerProfile

@@ -1,0 +1,2 @@
+[{selector: 'body', call: 'append', args: ['<div id="test_div_json"></div>']},
+ {selector: '#test_div_json', call: 'html', args: ['Some text']}]	      

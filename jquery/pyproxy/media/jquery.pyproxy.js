@@ -12,13 +12,17 @@ var pyproxy_debug_mode = false;
      * to the Ajax call.
      */
     $.pyproxy_form_to_dict = function(form_id) {
-	inputs = $(form_id + ' :input');
-	dict = {};
+	var inputs = $(form_id + ' :input');
+	var dict = {};
 
 	for (i=0; i<inputs.length; i++) {
-	    input = inputs[i];
-	    add = false;
-	    name = String(input.name);
+	    var input = inputs[i];
+	    var add = false;
+	    var name = String(input.name);
+
+	    if ($(input).hasClass('pyproxyIgnore')) {
+		continue;
+	    }
 
 	    if (input.type == 'radio') {
 		if (input.checked) {
@@ -50,13 +54,11 @@ var pyproxy_debug_mode = false;
 		dict[name] = $(input).val();
 	    }
 	}
-	
 	return dict;
     };
 
     /* Process the data  */
     $.pyproxy_process_data = function(data, callback) {
-	debug('Processing data ...');
 	for (i=0; i < data.length; i++) {
 	    command = data[i];
 	    selector = $(command.selector)

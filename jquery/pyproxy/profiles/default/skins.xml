@@ -7,4 +7,13 @@
  <skin-path name="*">
   <layer name="pyproxy" />
  </skin-path>
+
+ <object name="pyproxy_tests"
+    meta_type="Filesystem Directory View"
+    directory="jquery.pyproxy:skins/pyproxy_tests"/>
+
+ <skin-path name="*">
+  <layer name="pyproxy_tests" />
+ </skin-path>
+
 </object>
