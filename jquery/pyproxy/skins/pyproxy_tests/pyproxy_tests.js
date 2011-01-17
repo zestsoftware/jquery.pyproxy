@@ -10,11 +10,6 @@ function match(res, exp, msg) {
     }
 }
 
-function delete_spinner(s) {
-    return s.replace(/<div style=".*" id="pyproxy_spinner">.*<\/div>/, '');
-}
-
-
 test("Check that pyproxy is loaded correctly", function() {
     equal(typeof(jq1.pyproxy_call), 'function', 'We can use jq.pyproxy_call');
     equal(typeof(jq1().pyproxy), 'function', 'We can use jq().pyproxy');
@@ -219,22 +214,25 @@ test('Check that the callback is correctly called', function() {
 
 module('pyproxy_call');
 
-test('Using static empty JSON files as input', function() {
-    /* There is a good reason to use a timeout here.
-     * Some previous tests were using timed command. So we pause in order
-     * to be sure that they will not be responsible for changing the body
-     * content.
-     */
-    stop(3000);
+asyncTest('Using static empty JSON files as input', function() {
+    /* We clean content of the extra loader as some elements might still be changing */
+    jq1('#pyproxy_tests_extras').empty();
 
-    var body_content = delete_spinner(jq1('body').html());
+    /* We also remove the spinner */
+    var spinner = jq1('#pyproxy_spinner');
+    var spinner_content = spinner.html();
+    spinner.remove();
+
+    var body_content = jq1('body').html();
     jq1.pyproxy_call('pyproxy_json_test1',
 		     {},
 		     function() {
-			 equal(delete_spinner(jq1('body').html()),
+			 equal(jq1('body').html(),
 			       body_content,
 			       'The body was not modified');
 			 start();
+			 jq1('body').append('<div id="pyproxy_spinner"></div>');
+			 jq1('#pyproxy_spinner').html(spinner_content).hide();
 		     });
 });
 
@@ -249,8 +247,8 @@ asyncTest('Using static JSON files as input', function() {
 		     });
 });
 
-test('Integrating with real python views', function(){
-
+asyncTest('Integrating with real python views', function(){
+    start();
 });
 
 module('pyproxy');
