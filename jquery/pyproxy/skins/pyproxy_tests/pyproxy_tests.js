@@ -10,6 +10,11 @@ function match(res, exp, msg) {
     }
 }
 
+function delete_spinner(s) {
+    return s.replace(/<div style=".*" id="pyproxy_spinner">.*<\/div>/, '');
+}
+
+
 test("Check that pyproxy is loaded correctly", function() {
     equal(typeof(jq1.pyproxy_call), 'function', 'We can use jq.pyproxy_call');
     equal(typeof(jq1().pyproxy), 'function', 'We can use jq().pyproxy');
@@ -124,7 +129,7 @@ test('Empty data set', function() {
 });
 
 test('A call without arguments', function() {
-    jq1('body').append('<div id="test_content_deleted">Ho noes, I will disappear :(</div>');
+    jq1('#pyproxy_tests_extras').append('<div id="test_content_deleted">Ho noes, I will disappear :(</div>');
     equal(jq1('#test_content_deleted').html(),
 	  'Ho noes, I will disappear :(',
 	  'The content has been created correctly');
@@ -139,7 +144,7 @@ test('A call without arguments', function() {
 });
 
 test('Call with a single string argument', function() {
-    jq1('body').append('<div id="test_content_added"></div>');
+    jq1('#pyproxy_tests_extras').append('<div id="test_content_added"></div>');
     equal(jq1('#test_content_added').html(),
 	  '',
 	  'The div does not have any content');
@@ -152,7 +157,7 @@ test('Call with a single string argument', function() {
 });
 
 test('Call with a single number argument', function() {
-    jq1('body').append('<div id="test_div_fadded">I will be hidden soon</div>');
+    jq1('#pyproxy_tests_extras').append('<div id="test_div_fadded">I will be hidden soon</div>');
 
     match(String(jq1('#test_div_fadded').attr('style')),
 	  /^(undefined|)$/,
@@ -168,7 +173,7 @@ test('Call with a single number argument', function() {
 });
 
 test('Call with a dict argument', function() {
-    jq1('body').append('<div id="test_div_cssed">Let\'s get styled</div>');
+    jq1('#pyproxy_tests_extras').append('<div id="test_div_cssed">Let\'s get styled</div>');
     match(String(jq1('#test_div_cssed').attr('style')),
 	  /^(undefined|)$/,
 	  'The div does not have anything in the "style" attribute');
@@ -185,7 +190,7 @@ test('Call with a dict argument', function() {
 });
 
 test('Call with multiple arguments', function() {
-    jq1('body').append('<div id="test_div_attred">My attributes will be updated</div>');
+    jq1('#pyproxy_tests_extras').append('<div id="test_div_attred">My attributes will be updated</div>');
     equal(jq1('#test_div_attred').attr("class"),
 	  "",
 	  'The div does not have anything in the "class" attribute');
@@ -201,7 +206,7 @@ test('Call with multiple arguments', function() {
 });
 
 test('Check that the callback is correctly called', function() {
-    jq1.pyproxy_process_data([{'selector': 'body',
+    jq1.pyproxy_process_data([{'selector': '#pyproxy_tests_extras',
 			       'call': 'append',
 			       'args': ['<div id="test_div_callback"></div>']}],
 			       function(d) {
@@ -215,16 +220,12 @@ test('Check that the callback is correctly called', function() {
 module('pyproxy_call');
 
 test('Using static empty JSON files as input', function() {
-    function delete_spinner(s) {
-	return s.replace(/<div style=".*" id="pyproxy_spinner">.*<\/div>/, '');
-    }
-
     /* There is a good reason to use a timeout here.
      * Some previous tests were using timed command. So we pause in order
      * to be sure that they will not be responsible for changing the body
      * content.
      */
-    stop(1500);
+    stop(3000);
 
     var body_content = delete_spinner(jq1('body').html());
     jq1.pyproxy_call('pyproxy_json_test1',
@@ -248,7 +249,8 @@ asyncTest('Using static JSON files as input', function() {
 		     });
 });
 
-test('Integrating with real python views' function(){
+test('Integrating with real python views', function(){
+
 });
 
 module('pyproxy');

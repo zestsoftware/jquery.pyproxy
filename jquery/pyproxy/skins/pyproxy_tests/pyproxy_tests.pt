@@ -351,6 +351,9 @@
           </div>
         </fieldset>
       </form>
+
+      <h1>Container for created data</h1>
+      <div id="pyproxy_tests_extras"></div>
     </div>
   </body>
 </html>
