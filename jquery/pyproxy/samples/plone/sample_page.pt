@@ -23,6 +23,13 @@
             });
 
 
+      jq('#sample_3_toggle').live('click',
+             function(e) {
+               e.preventDefault();
+               jq('#ignored_textarea').toggleClass('pyproxyIgnore');
+             });
+      jq('#sample_3_submit').pyproxy('click', 'pyproxy_sample_form_to_string', '#sample_3_form');
+
       jq('#sample_plone_1_submit').pyproxy('click', 'pyproxy_sample_show_portal_message', '#sample_plone_1_form');
       jq('#sample_plone_2_submit').pyproxy('click', 'pyproxy_sample_hide_portal_message');
     </script>
@@ -106,8 +113,9 @@
 
       <p>As you can see on the first binding, we are using one more parameter
       when calling 'pyproxy'. We specified here the id of the form we wanted to
-      submit.<br />
-      <em>Note:</em> you are not limited to forms selector. Any container with inputs
+      submit.</p>
+
+      <p><em>Note:</em> you are not limited to forms selector. Any container with inputs
       would work. Using 'body' would send all inputs on the page, but that might
       not be really useful.</p>
 
@@ -117,10 +125,57 @@
       'pyproxy_call' instead.<br />
       Contrary to pyproxy, pyproxy_call is not binded to anything and calls the
       ajax view directly. It taks the same arguments than 'pyproxy', except for
-      the first one.<br />
-      <em>Note:</em> in version 0.4, it should be possible to compute data without having
+      the first one.</p>
+
+      <p>On this example, building the data manually is useless and it is way easier
+      and safer to use the first method (for example if you add new fields to you form
+      and forget to update the method to build the data, values of those fields will never
+      be sent to the server ...).<br />
+      The main use is when you want to collect data that do not belong to a form field, such
+      as the value of the 'id' attribute of the clicked link.</p>
+
+      <p><em>Note:</em> in version 0.4, it should be possible to compute data without having
       to use 'pyproxy_call' and bind elements manually.</p>
 
+      <h2>Sample 3 - filtering data from form</h2>
+      <p>When you are using a form selector, pyproxy will send all available inputs
+      found in the selected container. In the previous example, the server method
+      also received the value of the submit buttons (which might not be useful).<br />
+      There is two ways to control which datas are sent:</p>
+      <ul>
+        <li>manually compute the data as seen before</li>
+        <li>specifying ignored fields</li>
+      </ul>
+
+      <p>The second method is pretty simple to use. If you add the class 'pyproxyIgnore'
+      to a field, this one is ignored when sending the data.</p>
+
+      <p>In the form below, the 'togle' button will add/remove the 'pyproxyIgnore' class
+      on the textarea field. Clicking on the submit button will display below the data
+      as the python view received them.</p>
+
+      <form id="sample_3_form">
+        <label>
+          This text field is never ignored
+          <input type="text" name="not_ignored" />
+        </label><br />
+
+        <label for="ignored_textarea">This one might be ignored</label>
+        <textarea id="ignored_textarea"
+                  name="maybe_ignored"></textarea>
+
+        <input type="submit"
+               class="allowMultiSubmit"
+               id="sample_3_toggle"
+               value="Toggle" />
+        <input type="submit"
+               class="allowMultiSubmit"
+               id="sample_3_submit"
+               value="Submit the form" />
+      </form>
+
+      <div id="pyproxy_tests_form_holder"></div>
+      
       <h1 class="documentFirstHeading">Plone specifics</h1>
       <p>The JQueryProxy class defined in jquery.pyproxy.plone defines
       two extra methods that can be usefull to plone users:
