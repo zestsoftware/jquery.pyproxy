@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup">
+
+  <cmf:registerDirectory name="pyproxy_tests"/>
+  <include package=".samples.plone" />
+
+  <genericsetup:registerProfile
+      name="tests"
+      title="jquery.pyproxy"
+      directory="profiles/tests"
+      description='jquery.pyproxy'
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+</configure>
