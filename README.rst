@@ -245,7 +245,9 @@ Then, you can use the ``extend_grammar`` method so your methods are recognized::
        [<type 'dict'>, <type 'NoneType'>]]
       >>> jq('#my_dialog').showDialog('some text', 42, dict(opt1 = 2, opt2 = False))
 
+
 And of course it respects the grammar you defined::
+
       >>> jq('.bla').showDialog()
       Traceback (most recent call last):
       ...
