@@ -26,6 +26,22 @@
 
   <browser:page
       for="*"
+      name="pyproxy_sample_add_list_element"
+      class=".ajax.Samples"
+      attribute="add_list_element"
+      permission="zope2.View"
+     />
+
+  <browser:page
+      for="*"
+      name="pyproxy_sample_add_list_from_form"
+      class=".ajax.Samples"
+      attribute="add_list_element_from_form"
+      permission="zope2.View"
+     />
+
+  <browser:page
+      for="*"
       name="pyproxy_sample_show_portal_message"
       class=".ajax.Samples"
       attribute="show_portal_message"

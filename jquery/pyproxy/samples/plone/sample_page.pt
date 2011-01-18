@@ -9,6 +9,20 @@
 
   <metal:javascript_head fill-slot="javascript_head_slot">
     <script type="text/javascript">
+      jq('#sample_1').pyproxy('click', 'pyproxy_sample_add_list_element');
+      jq('#sample_2_submit_1').pyproxy('click',
+          'pyproxy_sample_add_list_from_form',
+          '#sample_2_form');
+
+      jq('#sample_2_submit_2').live('click',
+            function(e) {
+              e.preventDefault();
+
+              var data = {'text': jq('#sample_2_text').val()};
+              jq.pyproxy_call('pyproxy_sample_add_list_from_form', data);
+            });
+
+
       jq('#sample_plone_1_submit').pyproxy('click', 'pyproxy_sample_show_portal_message', '#sample_plone_1_form');
       jq('#sample_plone_2_submit').pyproxy('click', 'pyproxy_sample_hide_portal_message');
     </script>
@@ -21,6 +35,91 @@
   <body>
     <div metal:fill-slot="main">
       <h1 class="documentFirstHeading">jquery pyproxy samples page</h1>
+      <p>Let's see what is doable with pyproxy. All the Python code for
+      those samples can be found in the following files:</p>
+      <ul>
+        <li>jquery.pyproxy.samples.common: main code for the samples, also
+        work with django</li>
+        <li>jquery.pyproxy.samples.plone.ajax: the wrapper calling methods
+        from the previous file, but initializing the jquery object with the custom
+        plone version and using the plone's specific @jquery decorator.</li>
+      </ul>
+
+      <h2>Sample 1: modifying the DOM in python views.</h2>
+      <p>The first example is pretty simple. When you click on the link below, it
+      adds some text in the list.<br />
+      We do not submit any post data, the binding is pretty simple:</p>
+      <pre>jq('#sample_1').pyproxy('click', 'pyproxy_sample_add_list_element')
+      </pre>
+
+      <p>That simply says that when you click on the link with the id 'sample_1',
+      the pyproxy plugin will call the page called 'pyproxy_sample_add_list_element'.
+      </p>
+
+      <a id="sample_1">Click me to add elements below</a>
+      <ul id="pyproxy_sample_1_container">
+      </ul>
+
+      <h2>Sample 2: sending data to the python views</h2>
+      <p>Ok the first example was nice but pretty limitated, most of the time you
+      will have to send data to the server so he can process them.</p>
+
+      <p>There is two ways to send data to the server:</p>
+      <ul>
+        <li>using a selector to specify the form (or any container other container)</li>
+        <li>passing a Javascript dictionnary</li>
+      </ul>
+
+      <p>The form below provides two submit buttons, each using one of the solutions:</p>
+
+      <form id="sample_2_form" action="">
+        <label>
+          Enter text for the new list item: 
+          <input type="text" name="text" id="sample_2_text" />
+        </label>
+        <input type="submit"
+               class="allowMultiSubmit"
+               value="Send using form selector"
+               id="sample_2_submit_1" />
+        <input type="submit"
+               class="allowMultiSubmit"
+               value="Send using javascript computed data"
+               id="sample_2_submit_2" />
+        <ul id="pyproxy_sample_2_container">
+        </ul>
+      </form>
+
+      <p>The binding for those input is shown below:</p>
+      <pre>
+        jq('#sample_2_submit_1').pyproxy('click',
+                                         'pyproxy_sample_add_list_from_form',
+                                         '#sample_2_form');
+
+        jq('#sample_2_submit_2').live('click',
+            function(e) {
+              e.preventDefault();
+
+              var data = {'text': jq('#sample_2_text').val()};
+              jq.pyproxy_call('pyproxy_sample_add_list_from_form', data);
+            });
+      </pre>
+
+      <p>As you can see on the first binding, we are using one more parameter
+      when calling 'pyproxy'. We specified here the id of the form we wanted to
+      submit.<br />
+      <em>Note:</em> you are not limited to forms selector. Any container with inputs
+      would work. Using 'body' would send all inputs on the page, but that might
+      not be really useful.</p>
+
+      <p>For the second one, we did not use direclty the 'pyproxy' method, as we
+      want to compute data before sending them. So we binded an anonymous function
+      on the 'click' event of the object, computed the data and used
+      'pyproxy_call' instead.<br />
+      Contrary to pyproxy, pyproxy_call is not binded to anything and calls the
+      ajax view directly. It taks the same arguments than 'pyproxy', except for
+      the first one.<br />
+      <em>Note:</em> in version 0.4, it should be possible to compute data without having
+      to use 'pyproxy_call' and bind elements manually.</p>
 
       <h1 class="documentFirstHeading">Plone specifics</h1>
       <p>The JQueryProxy class defined in jquery.pyproxy.plone defines

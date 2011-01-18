@@ -338,28 +338,19 @@ something like this::
 Even if the jQuery doc tells that the show method can take multiple
 arguments (which is true, but not here).
 
-I use Python but not Django or Plone
-------------------------------------
 
-You should use Django.
+Is there some samples available ?
+---------------------------------
 
-If this solution is not acceptable, you can still update the
-@jquery decorator to work with your framework. The only
-thing this decorator does is to transform the JQueryProxy object
-returned by the function into JSON.
-To make the transformation, this code is enough::
+If you use Plone, add the following to one available
+``configure.zcml`` file (the one from your theme from example)::
 
-      >>> import simplejson as json
-      >>> jq_to_json = json.dumps(jq.json_serializable())
-      >>> jq_to_json
-      '[{"args": [{"width": "200px"}], "call": "css", "selector": ".nice_divs"}, {"args": [10], "call": "fadeIn", "selector": ".nice_divs"}, {"args": [], "call": "show", "selector": ".animated"}]'
+  <include package="jquery.pyproxy.samples.plone" />
 
-Then, the jq_to_json object must be returned according to your
-framework system (for example for Plone we just return it, for Django 
-we wrap it into a HttpResponse object).
+Restart the instance and then open
+``http://localhost:8080/your_plone_site/pyproxy_samples``.
 
-If you ported the @jquery decorator to any framework, please let me
-know so it can be integrated in the next release.
+If you use Django, some samples will be added later.
 
 Testing the module
 ------------------
@@ -386,6 +377,29 @@ In the ``portal_skins`` tool, you should see a new folder call
 ``pyproxy_tests``. Now open
 ``http://localhost:8080/your_plone_site/pyproxy_tests`` and you will
 see the qUnit tests running.
+
+I use Python but not Django or Plone
+------------------------------------
+
+You should use Django.
+
+If this solution is not acceptable, you can still update the
+@jquery decorator to work with your framework. The only
+thing this decorator does is to transform the JQueryProxy object
+returned by the function into JSON.
+To make the transformation, this code is enough::
+
+      >>> import simplejson as json
+      >>> jq_to_json = json.dumps(jq.json_serializable())
+      >>> jq_to_json
+      '[{"args": [{"width": "200px"}], "call": "css", "selector": ".nice_divs"}, {"args": [10], "call": "fadeIn", "selector": ".nice_divs"}, {"args": [], "call": "show", "selector": ".animated"}]'
+
+Then, the jq_to_json object must be returned according to your
+framework system (for example for Plone we just return it, for Django 
+we wrap it into a HttpResponse object).
+
+If you ported the @jquery decorator to any framework, please let me
+know so it can be integrated in the next release.
 
 
 Compatibility

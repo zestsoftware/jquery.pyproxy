@@ -1,6 +1,7 @@
 from Products.Five import BrowserView
 
 from jquery.pyproxy.plone import JQueryProxy, jquery
+from jquery.pyproxy.samples import common
 
 class Samples(BrowserView):
     @jquery
@@ -18,6 +19,18 @@ class Samples(BrowserView):
         jq('div#pyproxy_tests_form_holder').html(
             str(self.request.form))
         return jq
+
+    @jquery
+    def add_list_element(self):
+        jq = JQueryProxy()
+        return common.add_list_element(jq)
+
+    @jquery
+    def add_list_element_from_form(self):
+        jq = JQueryProxy()
+        return common.add_list_element_2(
+            jq,
+            self.request.form.get('text', ''))
 
     @jquery
     def show_portal_message(self):
