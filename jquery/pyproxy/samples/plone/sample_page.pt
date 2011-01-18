@@ -30,6 +30,14 @@
              });
       jq('#sample_3_submit').pyproxy('click', 'pyproxy_sample_form_to_string', '#sample_3_form');
 
+      jq('#sample_4_link').pyproxy('click',
+            'pyproxy_sample_link_generator',
+            {},
+            function(d) {
+              jq('#sample_4_container a').click(function(e) {e.preventDefault();});
+            });
+
+
       jq('#sample_plone_1_submit').pyproxy('click', 'pyproxy_sample_show_portal_message', '#sample_plone_1_form');
       jq('#sample_plone_2_submit').pyproxy('click', 'pyproxy_sample_hide_portal_message');
     </script>
@@ -176,6 +184,38 @@
 
       <div id="pyproxy_tests_form_holder"></div>
       
+      <h2>Sample 4 - using callback</h2>
+      <p>As you might have guessed, the Ajax calls performed by pyproxy are
+      asynchronous. So if you need to have some actions performed after 
+      the call to your server, you have to create a callback function.</p>
+
+      <p>In the following example, the callback will bind 'click' events
+      to the link created by the Ajax page.</p>
+
+      <pre>
+        jq('#sample_4_link').pyproxy('click',
+            'pyproxy_sample_link_generator',
+            {},
+            function(d) {
+              jq('#sample_4_container a').click(function(e) {e.preventDefault();});
+            });
+      </pre>
+
+      <a id="sample_4_link">Click here to generate links below</a>
+      <div id="sample_4_container">
+      </div>
+
+      <p>As you can see, the generated link do not bring you to the homepages of those
+      projects, as we prevented default event to occur in the callback.<br />
+      You can also see that the callback takes a parameter (not used here). It is
+      the JSON structure returned by the server. Normally you should not have to use it as
+      pyproxy has already processed it, but it might be interresting for debugging or
+      to check which data have been modified.</p>
+
+      <p><em>Note:</em> in the current version, it is only possible to specify a callback
+      on success. Version 0.4 should also allow to specify a callback when things go wrong.</p>
+
+
       <h1 class="documentFirstHeading">Plone specifics</h1>
       <p>The JQueryProxy class defined in jquery.pyproxy.plone defines
       two extra methods that can be usefull to plone users:

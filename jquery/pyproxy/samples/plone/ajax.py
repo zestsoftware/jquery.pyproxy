@@ -33,6 +33,11 @@ class Samples(BrowserView):
             self.request.form.get('text', ''))
 
     @jquery
+    def link_generator(self):
+        jq = JQueryProxy()
+        return common.link_generator(jq)
+
+    @jquery
     def show_portal_message(self):
         """ Displays a portal message.
         """

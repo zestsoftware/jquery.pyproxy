@@ -42,6 +42,14 @@
 
   <browser:page
       for="*"
+      name="pyproxy_sample_link_generator"
+      class=".ajax.Samples"
+      attribute="link_generator"
+      permission="zope2.View"
+     />
+
+  <browser:page
+      for="*"
       name="pyproxy_sample_show_portal_message"
       class=".ajax.Samples"
       attribute="show_portal_message"
