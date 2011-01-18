@@ -1,0 +1,19 @@
+<configure xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:plone="http://namespaces.plone.org/plone">
+
+  <browser:page
+      for="*"
+      name="pyproxy_sample_do_nothing"
+      class=".ajax.Samples"
+      attribute="do_nothing"
+      permission="zope2.View"
+     />
+
+  <browser:page
+      for="*"
+      name="pyproxy_sample_form_to_string"
+      class=".ajax.Samples"
+      attribute="form_to_string"
+      permission="zope2.View"
+     />
+</configure>

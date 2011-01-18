@@ -10,9 +10,9 @@
 
   <genericsetup:registerProfile
       name="tests"
-      title="jquery.pyproxy"
+      title="jquery.pyproxy tests"
       directory="profiles/tests"
-      description='jquery.pyproxy'
+      description='jquery.pyproxy extras data for JS tests'
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 </configure>

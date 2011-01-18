@@ -359,6 +359,32 @@ we wrap it into a HttpResponse object).
 If you ported the @jquery decorator to any framework, please let me
 know so it can be integrated in the next release.
 
+Testing the module
+------------------
+
+There are tests embedded in this package to ensure it works
+correctly. To run the tests on the python side, you can run::
+
+      bin/instance test -m jquery.pyproxy (for Plone users)
+      bin/django test pyproxy (for Django users with a buildout)
+      ./manage.py test pyproxy (for Django users without buildout)
+
+There is also qUnit tests to ensure the jQuery library works
+correclty. FOr the oment it is only available for Plone users. First,
+you have to load the 'tests.zcml' file from jquery.pyproxy.
+For example in the main configure.zcml of a product you develop::
+
+  <include package="jquery.pyproxy"
+           file="tests.zcml" />
+
+Then, in the ZMI, go to the portal_setup, then the ``import``
+tab. Select ``jquery.pyproxy tests`` in the list, select the ``Skins
+tools`` step and then click on ``Import selected steps``.
+In the ``portal_skins`` tool, you should see a new folder call
+``pyproxy_tests``. Now open
+``http://localhost:8080/your_plone_site/pyproxy_tests`` and you will
+see the qUnit tests running.
+
 
 Compatibility
 -------------
