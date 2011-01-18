@@ -15,7 +15,7 @@ What should be coming for the next releases.
 
  - extract sub functions to ease unit testing. [done]
 
- - tests for the jQuery plugin itself.
+ - tests for the jQuery plugin itself. [done]
 
  - embed spinner in the package. [done - Django users still have to do
    some manual steps]
