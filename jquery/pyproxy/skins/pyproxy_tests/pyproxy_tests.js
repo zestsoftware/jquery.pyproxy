@@ -319,7 +319,7 @@ module('pyproxy');
 
 asyncTest('Binding "pyproxy" to a link element - no form sent', function(){
     /* We're not using a submit button as the preventDefault is not taken into account ...*/
-    jq1('#pyproxy_tests_extras').append('<a id="test_empty_form_trigger">Let\' send nothing</div>');
+    jq1('#pyproxy_tests_extras').append('<a href="#" id="test_empty_form_trigger">Let\'s send nothing</a>');
     var submit = jq1('#test_empty_form_trigger');
     submit.pyproxy('click',
 		   'pyproxy_sample_form_to_string',
@@ -328,12 +328,13 @@ asyncTest('Binding "pyproxy" to a link element - no form sent', function(){
 			     "{}");
 		       start();
 		   });
+
     submit.trigger('click');
 });
 
 asyncTest('Binding "pyproxy" to a link element - sending a form with ignored elements', function(){
     /* We're not using a submit button as the preventDefault is not taken into account ...*/
-    jq1('#pyproxy_tests_extras').append('<a id="test_empty_form_trigger_ignored">Let\' send something</div>');
+    jq1('#pyproxy_tests_extras').append('<a href="#" id="test_empty_form_trigger_ignored">Let\' send something</a>');
     var submit = jq1('#test_empty_form_trigger_ignored');
     submit.pyproxy('click',
 		   'pyproxy_sample_form_to_string',
