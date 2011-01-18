@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="here/main_template/macros/master"
+      xml:lang="en"
+      lang="en"
+      i18n:domain="jquery.pyproxy">
+
+  <metal:javascript_head fill-slot="javascript_head_slot">
+    <script type="text/javascript">
+      jq('#sample_plone_1_submit').pyproxy('click', 'pyproxy_sample_show_portal_message', '#sample_plone_1_form');
+      jq('#sample_plone_2_submit').pyproxy('click', 'pyproxy_sample_hide_portal_message');
+    </script>
+  </metal:javascript_head>
+
+
+  <metal:block fill-slot="top_slot"
+               tal:define="dummy python:request.set('disable_border', 0)" />
+
+  <body>
+    <div metal:fill-slot="main">
+      <h1 class="documentFirstHeading">jquery pyproxy samples page</h1>
+
+      <h1 class="documentFirstHeading">Plone specifics</h1>
+      <p>The JQueryProxy class defined in jquery.pyproxy.plone defines
+      two extra methods that can be usefull to plone users:
+      </p>
+      <ul>
+        <li>set_portal_message(message, msg_type): to add a portal message.</li>
+        <li>hide_portal_message(): to hide the portal message (surprisingly).</li>
+      </ul>
+
+      <p>There might be more to come in the next releases.</p>      
+
+      <h2>Sample 1 - playing with the status message</h2>
+      <p> Depending on the text you enter in the text field, you'll obtain
+      different message:
+      </p>
+      <ul>
+        <li>empty text: an error message;</li>
+        <li>a short text (less than 10 characters): a warning message</li>
+        <li>a longer text: an info message</li>
+      </ul>
+      <form id="sample_plone_1_form"
+            method="POST"
+            tal:attributes="action context/absolute_url" >
+        <label>
+          Enter some text, or not: 
+          <input type="text"
+                 name="text" />
+        </label>
+        <input type="submit"
+               class="allowMultiSubmit"
+               value="Let's submit this form"
+               id="sample_plone_1_submit" />
+      </form>
+
+      <h2>Sample 2 - removing status message</h2>
+      <p>As the JqueryProxy object defined in jquery.pyproxy.plone allows 
+      you to set portal message, it's fair it also allows to remove them.</p> 
+      
+      <input type="submit"
+             class="allowMultiSubmit"
+             value="Remove the portal message"
+             id="sample_plone_2_submit" />
+
+    </div>
+  </body>
+</html>

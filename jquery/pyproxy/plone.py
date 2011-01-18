@@ -17,7 +17,6 @@ class JQueryProxy(JQueryProxyBase):
         props = getToolByName(portal, 'portal_properties')
         return props.site_properties.getProperty('default_language')
 
-
     def set_portal_message(self, message, msg_type='info'):
         """ Adds or update the portal message.
 
@@ -54,7 +53,7 @@ class JQueryProxy(JQueryProxyBase):
     def hide_portal_message(self):
         """ Hides all portal messages.
         """
-        self('dl .portalMessage').hide()
+        self('dl.portalMessage').hide()
 
 def jquery(function):
     """ The @jquery decorator can be added to a function

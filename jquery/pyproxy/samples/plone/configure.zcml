@@ -16,4 +16,27 @@
       attribute="form_to_string"
       permission="zope2.View"
      />
+
+  <browser:page
+      for="*"
+      name="pyproxy_samples"
+      template="sample_page.pt"
+      permission="zope2.View"
+     />
+
+  <browser:page
+      for="*"
+      name="pyproxy_sample_show_portal_message"
+      class=".ajax.Samples"
+      attribute="show_portal_message"
+      permission="zope2.View"
+     />
+
+  <browser:page
+      for="*"
+      name="pyproxy_sample_hide_portal_message"
+      class=".ajax.Samples"
+      attribute="hide_portal_message"
+      permission="zope2.View"
+     />
 </configure>
