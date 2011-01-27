@@ -1,15 +1,3 @@
-function match(res, exp, msg) {
-    if (exp.test(res)) {
-	equal('Match with: ' + exp,
-	      'Match with: ' + exp,
-	      msg);
-    } else {
-	equal(res,
-	      'Expected match with: ' + exp,
-	      msg);
-    }
-}
-
 test("Check that pyproxy is loaded correctly", function() {
     equal(typeof(jq1.pyproxy_call), 'function', 'We can use jq.pyproxy_call');
     equal(typeof(jq1().pyproxy), 'function', 'We can use jq().pyproxy');

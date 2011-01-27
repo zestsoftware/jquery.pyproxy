@@ -11,7 +11,7 @@ What should be coming for the next releases.
  - tests for the Plone specifics.
 
  - tests for the Django specifics (there should only be the @jquery
-   decoarator).
+   decorator).
 
  - extract sub functions to ease unit testing. [done]
 
