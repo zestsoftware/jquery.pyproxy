@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3 (unreleased)
+0.3 (2011-02-25)
 ----------------
 
 - you can now specify a callback without specifying a form to
