@@ -8,11 +8,6 @@ What should be coming for the next releases.
 
  - tests for the base Python modules. [done]
 
- - tests for the Plone specifics.
-
- - tests for the Django specifics (there should only be the @jquery
-   decorator).
-
  - extract sub functions to ease unit testing. [done]
 
  - tests for the jQuery plugin itself. [done]
@@ -22,6 +17,11 @@ What should be coming for the next releases.
 
 0.4
 ---
+
+ - tests for the Plone specifics.
+
+ - tests for the Django specifics (there should only be the @jquery
+   decorator).
 
  - refactor the jQuery plugin, so it takes only one argument which
    will be a dictionnary of options.
