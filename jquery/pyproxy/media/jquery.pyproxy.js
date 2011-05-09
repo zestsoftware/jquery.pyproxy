@@ -1,12 +1,4 @@
-var pyproxy_debug_mode = false;
-
 (function($) {
-    debug = function(msg) {
-	if (pyproxy_debug_mode) {
-	    console.log(msg);
-	}
-    }
-
     /*
      * Transforms a form into a dictionnary that can be sent
      * to the Ajax call.
@@ -119,7 +111,6 @@ var pyproxy_debug_mode = false;
 	    $.pyproxy_call(url, data, callback)
 	}
 
-	debug('Binded event \'' + event + '\' on \'' + this.selector + '\' to call \'' + url + '\'')
 	return this.live(event, make_call);
     };
 })(jQuery);
