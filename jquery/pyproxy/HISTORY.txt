@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.3.1 (unreleased):
--------------------
+0.3.1 (2011-05-09)
+------------------
 
 - removed the 'debug' fonction that was sometimes comflicting with
   other products. [vincent]
