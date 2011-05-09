@@ -1,0 +1,60 @@
+Plone specific tests
+====================
+
+We need to set up some data for the tests to run, have a look to
+'test_plone.py'. This method basically adds jquery.pyproxy and
+registers two users.
+    >>> self.setup_data()
+    >>> self.browser.open('http://nohost/plone/')
+
+JS/CSS integration
+------------------
+
+First, we'll tests that the specific javascript file that pyproxy need
+to be used are correctly loaded in every pages.
+
+First the base library:
+    >>> '++resource++jquery.pyproxy.min' in self.browser.contents
+    True
+
+And the script that creates the spinner:
+    >>> '++resource++jquery.pyproxy.spinner.min.js' in self.browser.contents
+    True
+
+The non-compressed versions are not integrated by default:
+    >>> '++resource++jquery.pyproxy.js' in self.browser.contents
+    False
+    >>> '++resource++jquery.pyproxy.spinner.js' in self.browser.contents
+    False
+
+There is also one CSS file used for theming the spinner:
+    >>> '++resource++jquery.pyproxy.spinner.css' in self.browser.contents
+    True
+
+Plone specific method
+---------------------
+
+jquery.pyproxy defines some specific methods for Plone users:
+ - set_portal_message: that automatically translates a message and
+ displays it as a normal portal message
+ - hide_portal_message: that, surprisingly, hides the portal message.
+
+We have a view called 'pyproxy_sample_translated_portal_message' that
+shows the message 'This field is required, please provide some
+information.' as a portal message.
+
+By default, it will show the text in the original language:
+    >>> self.browser.open('http://nohost/plone/pyproxy_sample_translated_portal_message')
+
+
+Now if we call the same page logged in as a french guy, the message
+appears in french (and the accents are not a problem):
+    >>> self.login_as_user('ze_french_guy', 'lemotdepasse')
+    >>> self.browser.open('http://nohost/plone/pyproxy_sample_translated_portal_message')
+
+
+Same thing as a Japanese user:
+    >>> self.login_as_user('japanese_user', 'howdoyousaypasswordinjapanese?')
+    >>> self.browser.open('http://nohost/plone/pyproxy_sample_translated_portal_message')
+
+

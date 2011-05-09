@@ -43,8 +43,9 @@ class JQueryProxy(JQueryProxyBase):
                               target_language=lang)
 
         # The message might not be translated.
+        portal = getSite()
         if type(message) == Message:
-            message = translate(message, target_language=lang)
+            message = translate(message, context=portal.REQUEST)
  
         self('#viewlet-above-content').before(html % (msg_type,
                                                       msg_title,

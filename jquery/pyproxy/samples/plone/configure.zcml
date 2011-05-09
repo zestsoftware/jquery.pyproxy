@@ -63,4 +63,12 @@
       attribute="hide_portal_message"
       permission="zope2.View"
      />
+
+  <browser:page
+      for="*"
+      name="pyproxy_sample_translated_portal_message"
+      class=".ajax.Samples"
+      attribute="translated_portal_message"
+      permission="zope2.View"
+     />
 </configure>

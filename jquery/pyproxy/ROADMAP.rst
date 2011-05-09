@@ -15,13 +15,18 @@ What should be coming for the next releases.
  - embed spinner in the package. [done - Django users still have to do
    some manual steps]
 
-0.4
----
+0.3.1
+-----
+
+ - fix the RST problems. [done]
 
  - tests for the Plone specifics.
 
  - tests for the Django specifics (there should only be the @jquery
    decorator).
+
+0.4
+---
 
  - refactor the jQuery plugin, so it takes only one argument which
    will be a dictionnary of options.

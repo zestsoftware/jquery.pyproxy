@@ -66,3 +66,14 @@ class Samples(BrowserView):
         jq = JQueryProxy()
         jq.hide_portal_message()
         return jq
+
+    @jquery
+    def translated_portal_message(self):
+        """ Shows a portal message with a text translated
+        in the user's language.
+        """
+        jq = JQueryProxy()
+        from Products.CMFPlone import PloneMessageFactory as PMF
+        msg = PMF(u'This field is required, please provide some information.')
+        jq.set_portal_message(msg, 'info')
+        return jq
