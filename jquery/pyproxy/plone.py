@@ -8,6 +8,7 @@ from zope.i18nmessageid.message import Message
 from Products.CMFPlone import PloneMessageFactory as _p
 
 from base import JQueryProxy as JQueryProxyBase
+from base import this
 
 class JQueryProxy(JQueryProxyBase):
 

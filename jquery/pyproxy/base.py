@@ -6,10 +6,12 @@ from jquery.pyproxy.utils import package_contents
 class JQueryCommand(object):
     """ An object storing JQuery commands done.
     """
-    def __init__(self, grammar = {}):
+    def __init__(self, grammar = {}, previous = None):
         self.method = ''
         self.args = []
         self.grammar = grammar
+        self.previous = previous
+        self.next = None
 
     def __getattr__(self, name):
         """ We override __getattr__ so we can automate some code, as
@@ -79,6 +81,10 @@ class JQueryCommand(object):
         # If no error has been found, we can save the arguments.
         self.args = list(args)
 
+        # We create a chained call.
+        self.next = JQueryCommand(self.grammar, self)
+        return self.next
+
     def __str__(self):
         """ Returns the method called and the arguments used.
 
@@ -87,8 +93,12 @@ class JQueryCommand(object):
         >>> str(jq.calls[-1])
         "css({'text-decoration': 'underline'})"
         """
-        return '%s(%s)' % (self.method,
-                           str(self.args)[1:-1])
+        if self.method:
+            return '%s(%s)%s' % (self.method,
+                                 str(self.args)[1:-1],
+                                 (self.next and self.next.method) and '.%s' % self.next or '')
+        return ''
+
     def __repr__(self):
         """ See __str__
 
@@ -98,6 +108,35 @@ class JQueryCommand(object):
         css({'text-decoration': 'underline'})
         """
         return str(self)
+
+    def __dict__(self):
+        """ Returns the dictionnary representing the call. This is used to build
+        the JSON serialization of the calls.
+
+        >>> jq = JQueryProxy()
+        >>> jq('').css({'text-decoration': 'underline'})
+        >>> jq.calls[-1].__dict__()
+        {'args': [{'text-decoration': 'underline'}],
+         'call': 'css'}
+
+        Chained calls are handled in the 'next' key:
+        >>> jq('').css({'text-decoration': 'underline'}).fadeIn(10).hide()
+        >>> jq.calls[-1].__dict__()
+        {'args': [{'text-decoration': 'underline'}],
+         'call': 'css',
+         'next': {'args': [10],
+                  'call': 'fadeIn',
+                  'next': {'args': [],
+                           'call': 'hide'}}}
+        """
+        d = {}
+        d['call'] = self.method
+        d['args'] = self.args
+
+        if (self.next and self.next.method):
+            d['next'] = self.next.__dict__()
+
+        return d
 
 class JQueryProxy(object):
     base_grammar = {}
@@ -126,24 +165,24 @@ class JQueryProxy(object):
 
         >>> jq = JQueryProxy()
         >>> sorted(jq.grammar.keys())
-        ['addClass', 'after', 'animate', 'append',
-         'appendTo', 'attr', 'before', 'css', 'detach',
-         'empty', 'fadeIn', 'fadeOut', 'fadeTo', 'hide',
-         'html', 'insertAfter', 'insertBefore', 'prepend',
-         'prependTo', 'remove', 'removeAttr', 'removeClass',
-         'replaceAll', 'replaceWith', 'show', 'slideDown',
-         'slideToggle', 'slideUp', 'text', 'toggle', 'toggleClass',
-         'unwrap', 'wrap', 'wrapAll', 'wrapInner']
+        ['addClass', 'after', 'animate', 'append', 'appendTo',
+         'attr', 'before', 'css', 'detach', 'empty', 'fadeIn',
+         'fadeOut', 'fadeTo', 'find', 'hide', 'html', 'insertAfter',
+         'insertBefore', 'parent', 'prepend', 'prependTo', 'remove',
+         'removeAttr', 'removeClass', 'replaceAll', 'replaceWith', 'show',
+         'slideDown', 'slideToggle', 'slideUp', 'text', 'toggle',
+         'toggleClass', 'unwrap', 'wrap', 'wrapAll', 'wrapInner']
 
         >>> jq.extend_grammar({'a_new_method': []})
         >>> sorted(jq.grammar.keys())
-        ['a_new_method', 'addClass', 'after', 'animate', 'append',
-         'appendTo', 'attr', 'before', 'css', 'detach', 'empty', 'fadeIn',
-         'fadeOut', 'fadeTo', 'hide', 'html', 'insertAfter', 'insertBefore',
-         'prepend', 'prependTo', 'remove', 'removeAttr', 'removeClass',
-         'replaceAll', 'replaceWith', 'show', 'slideDown', 'slideToggle',
-         'slideUp', 'text', 'toggle', 'toggleClass', 'unwrap', 'wrap',
-         'wrapAll', 'wrapInner']
+        ['a_new_method', 'addClass', 'after', 'animate',
+         'append', 'appendTo', 'attr', 'before', 'css',
+         'detach', 'empty', 'fadeIn', 'fadeOut', 'fadeTo',
+         'find', 'hide', 'html', 'insertAfter', 'insertBefore',
+         'parent', 'prepend', 'prependTo', 'remove', 'removeAttr',
+         'removeClass', 'replaceAll', 'replaceWith', 'show', 'slideDown',
+         'slideToggle', 'slideUp', 'text', 'toggle', 'toggleClass',
+         'unwrap', 'wrap', 'wrapAll', 'wrapInner']
 
         If a method already exists in the grammar, it is not overriden.
         >>> jq.grammar['animate']
@@ -284,10 +323,20 @@ class JQueryProxy(object):
         for i in range(0, len(self.selectors)):
             command = {}
             command['selector'] = self.selectors[i]
-            command['call'] = self.calls[i].method
-            command['args'] = self.calls[i].args
+            command.update(self.calls[i].__dict__())
             res.append(command)
         return res
+
+
+# Emulates the 'this' Javascript keyword.
+this = {'__pyproxy_custom': True,
+        'is_this': True}
+
+
+function = lambda x: {'__pyproxy_custom': True,
+                      'is_function': True,
+                      'function_name': x}
+
 
 def clean_string(s):
     """ Deprecated as it has been moved to utils.
@@ -302,3 +351,4 @@ def clean_string(s):
         ' on JS side',
         DeprecationWarning)
     return s
+

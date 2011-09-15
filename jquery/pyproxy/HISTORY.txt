@@ -4,7 +4,11 @@ Changelog
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- added find() and parent() suppot. [vincent]
+
+- added support for chained calls. [vincent]
+
+- Added support for 'this'. [vincent]
 
 
 0.3 (2011-02-25)
