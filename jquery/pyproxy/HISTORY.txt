@@ -7,6 +7,11 @@ Changelog
 - Nothing changed yet.
 
 
+0.4.1 (2011-09-19)
+------------------
+
+- Updated the minified version. [vincent]
+
 0.4 (2011-09-19)
 ----------------
 
