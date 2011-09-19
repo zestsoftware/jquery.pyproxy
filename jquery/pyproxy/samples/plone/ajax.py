@@ -73,5 +73,13 @@ class Samples(BrowserView):
         'Content replaced'
         """
         jq = JQueryProxy()
-        jq(this).html('Content replaced');
+        jq(this).html('Content replaced')
+        return jq
+
+    @jquery
+    def chained_calls(self):
+        """ Simple demo for chained calls.
+        """
+        jq = JQueryProxy()
+        jq(this).parent().find('span').addClass('my_new_class')
         return jq

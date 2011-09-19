@@ -71,4 +71,12 @@
       attribute="replace_this_content"
       permission="zope2.View"
      />
+
+  <browser:page
+      for="*"
+      name="pyproxy_sample_chained_calls"
+      class=".ajax.Samples"
+      attribute="chained_calls"
+      permission="zope2.View"
+     />
 </configure>

@@ -350,11 +350,22 @@ asyncTest('Binding "pyproxy" to a link element - sending a form with ignored ele
 });
 
 asyncTest('Binding a function using "this"', function() {
-    var link =jq('a#pyproxy_this');
+    var link = jq1('a#pyproxy_this');
     link.pyproxy('click',
 		 'pyproxy_sample_replace_this_content',
 		 function() {
 		     equal(link.html(), 'Content replaced');
+		     start();
+		 });
+    link.trigger('click');
+});
+
+asyncTest('Chaining calls', function() {
+    var link = jq1('a#chained_calls_trigger');
+    link.pyproxy('click',
+		 'pyproxy_sample_chained_calls',
+		 function() {
+		     equal(link.parent().find('span').hasClass('my_new_class'), true);
 		     start();
 		 });
     link.trigger('click');
