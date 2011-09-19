@@ -4,8 +4,7 @@ Changelog
 0.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
+- Updated the minified version. [vincent]
 
 0.4 (2011-09-19)
 ----------------
