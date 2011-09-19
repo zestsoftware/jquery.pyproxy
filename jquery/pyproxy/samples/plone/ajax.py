@@ -1,6 +1,6 @@
 from Products.Five import BrowserView
 
-from jquery.pyproxy.plone import JQueryProxy, jquery
+from jquery.pyproxy.plone import JQueryProxy, jquery, this
 from jquery.pyproxy.samples import common
 
 class Samples(BrowserView):
@@ -65,4 +65,13 @@ class Samples(BrowserView):
         """
         jq = JQueryProxy()
         jq.hide_portal_message()
+        return jq
+
+    @jquery
+    def replace_this_content(self):
+        """ Replaces the content of the binded elements with
+        'Content replaced'
+        """
+        jq = JQueryProxy()
+        jq(this).html('Content replaced');
         return jq

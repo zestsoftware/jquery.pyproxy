@@ -359,6 +359,12 @@
       <h1>Container for returned form content</h1>
       <div id="pyproxy_tests_form_holder">
       </div>
+
+      <h1>Test for using "this" keyword</h1>
+      <div id="pyproxy_tests_this_holder">
+        <span id="pyproxy_call_this"></span>
+        <a id="pyproxy_this"></a>
+      </div>
     </div>
   </body>
 </html>
