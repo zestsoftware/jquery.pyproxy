@@ -18,6 +18,12 @@ What should be coming for the next releases.
 0.4
 ---
 
+ - allow chained calls on the Python side. [done]
+
+
+0.5
+---
+
  - tests for the Plone specifics.
 
  - tests for the Django specifics (there should only be the @jquery
@@ -32,14 +38,10 @@ What should be coming for the next releases.
  - allow debug mode for a specific call instead of having a
    global setting.
 
- - add custom events when request stqrts/ends.
+ - add custom events when request starts/ends.
 
- - use the vents to show the spinner.
+ - use the events to show the spinner.
 
-0.5
----
-
- - allow chained calls on the Python side.
 
 1.0
 ---

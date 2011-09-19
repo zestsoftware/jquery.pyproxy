@@ -374,7 +374,7 @@ correctly. To run the tests on the python side, you can run::
       ./manage.py test pyproxy (for Django users without buildout)
 
 There is also qUnit tests to ensure the jQuery library works
-correclty. FOr the oment it is only available for Plone users. First,
+correclty. For the moment it is only available for Plone users. First,
 you have to load the 'tests.zcml' file from jquery.pyproxy.
 For example in the main configure.zcml of a product you develop::
 
@@ -384,7 +384,7 @@ For example in the main configure.zcml of a product you develop::
 Then, in the ZMI, go to the portal_setup, then the ``import``
 tab. Select ``jquery.pyproxy tests`` in the list, select the ``Skins
 tools`` step and then click on ``Import selected steps``.
-In the ``portal_skins`` tool, you should see a new folder call
+In the ``portal_skins`` tool, you should see a new folder called
 ``pyproxy_tests``. Now open
 ``http://localhost:8080/your_plone_site/pyproxy_tests`` and you will
 see the qUnit tests running.
