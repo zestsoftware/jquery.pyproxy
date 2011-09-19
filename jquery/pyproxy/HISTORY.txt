@@ -4,11 +4,18 @@ Changelog
 0.4 (unreleased)
 ----------------
 
-- added find() and parent() suppot. [vincent]
+- added find() and parent() support. [vincent]
 
 - added support for chained calls. [vincent]
 
 - Added support for 'this'. [vincent]
+
+
+0.3.1 (2011-05-09)
+------------------
+
+- removed the 'debug' fonction that was sometimes comflicting with
+  other products. [vincent]
 
 
 0.3 (2011-02-25)
