@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 import simplejson as json
 
-from base import JQueryProxy
+from base import JQueryProxy, this
 
 def jquery(function):
     """ The @jquery decorator can be added to a function

@@ -1,6 +1,6 @@
 from Products.Five import BrowserView
 
-from jquery.pyproxy.plone import JQueryProxy, jquery
+from jquery.pyproxy.plone import JQueryProxy, jquery, this
 from jquery.pyproxy.samples import common
 
 class Samples(BrowserView):
@@ -76,4 +76,21 @@ class Samples(BrowserView):
         from Products.CMFPlone import PloneMessageFactory as PMF
         msg = PMF(u'This field is required, please provide some information.')
         jq.set_portal_message(msg, 'info')
+        return jq
+
+    @jquery
+    def replace_this_content(self):
+        """ Replaces the content of the binded elements with
+        'Content replaced'
+        """
+        jq = JQueryProxy()
+        jq(this).html('Content replaced')
+        return jq
+
+    @jquery
+    def chained_calls(self):
+        """ Simple demo for chained calls.
+        """
+        jq = JQueryProxy()
+        jq(this).parent().find('span').addClass('my_new_class')
         return jq

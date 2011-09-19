@@ -129,12 +129,14 @@ Currently, JQueryProxy supports all manipulation API of JQuery 1.4 and all
 the effect API.
 
       >>> sorted(jq.grammar.keys())
-      ['addClass', 'after', 'animate', 'append', 'appendTo', 'attr',
-       'before', 'css', 'detach', 'empty', 'fadeIn', 'fadeOut', 'fadeTo',
-       'hide', 'html', 'insertAfter', 'insertBefore', 'prepend', 'prependTo',
-       'remove', 'removeAttr', 'removeClass', 'replaceAll', 'replaceWith',
-       'show', 'slideDown', 'slideToggle', 'slideUp', 'text', 'toggle',
-       'toggleClass', 'unwrap', 'wrap', 'wrapAll', 'wrapInner']
+      ['addClass', 'after', 'animate', 'append', 'appendTo',
+       'attr', 'before', 'css', 'detach', 'empty', 'fadeIn',
+       'fadeOut', 'fadeTo', 'find', 'hide', 'html', 'insertAfter',
+       'insertBefore', 'parent', 'prepend', 'prependTo', 'remove',
+       'removeAttr', 'removeClass', 'replaceAll', 'replaceWith',
+       'show', 'slideDown', 'slideToggle', 'slideUp', 'text',
+       'toggle', 'toggleClass', 'unwrap', 'wrap', 'wrapAll', 'wrapInner']
+
 
 So if you know how to use them in jQuery, you know how to use them
 with pyproxy, for example::
@@ -163,6 +165,7 @@ server logs)::
       ...
       TypeError: Argument 2 of method fadeTo must be: <type 'int'>
 
+
 If you need to process a list of selectors, you can use the ``batch``
 method of the JQueryObject. It takes five arguments:
 
@@ -190,6 +193,15 @@ That is equivalent to::
        "jq('#title_error').addClass('error')",
        "jq('#text_error').addClass('error')"]
 
+You can also chain the jQuery calls as you would do on the Javascript side::
+
+      >>> jq('.nice_divs').css({'width': '200px'}).fadeIn(10)
+      >>> jq.list_calls()[-1]
+      "jq('.nice_divs').css({'width': '200px'}).fadeIn(10)"
+
+Note that we don't check (yet) if the call returns something that can
+be chained.
+
 When you need to have a clear overview of which calls have been done
 by the jq object, you can use the ``list_calls`` method::
 
@@ -199,7 +211,14 @@ by the jq object, you can use the ``list_calls`` method::
        "jq('.to_slide').slideDown()",
        "jq('.empty').empty()",
        "jq('.to_fade').fadeTo()",
-      ...]
+       "jq('#email_error').addClass('error')",
+       "jq('#title_error').addClass('error')",
+       "jq('#text_error').addClass('error')",
+       "jq('#email_error').addClass('error')",
+       "jq('#title_error').addClass('error')",
+       "jq('#text_error').addClass('error')",
+       "jq('.nice_divs').css({'width': '200px'}).fadeIn(10)"]
+
 
 You can see that even failing calls are stored here (but not the
 parameters).
@@ -290,17 +309,9 @@ be integrated in the next release of jquery.pyproxy.
 Limitations
 -----------
 
-There is currently three (at least) major limitations.
+There is currently two (at least) major limitations.
 
-First, you can not do chained calls, like this::
-
-      >>> jq = JQueryProxy()
-      >>> jq('.nice_divs').css({'width': '200px'}).fadeIn(10)
-      Traceback (most recent call last):
-      ...
-      AttributeError: 'NoneType' object has no attribute 'fadeIn'
-
-Second, you can not store your selector, like this::
+First, you can not store your selector, like this::
 
       >>> jq = JQueryProxy()
       >>> divs = jq('.nice_divs')
@@ -327,7 +338,7 @@ calls::
       ["jq('.nice_divs').css({'width': '200px'})",
        "jq('.nice_divs').fadeIn(10)"]
 
-The third one is that the callback are not handled, so you can not use
+The second one is that the callback are not handled, so you can not use
 something like this::
 
       >>> jq('.animated').show(10, 'my_callback')
@@ -363,7 +374,7 @@ correctly. To run the tests on the python side, you can run::
       ./manage.py test pyproxy (for Django users without buildout)
 
 There is also qUnit tests to ensure the jQuery library works
-correclty. FOr the oment it is only available for Plone users. First,
+correclty. For the moment it is only available for Plone users. First,
 you have to load the 'tests.zcml' file from jquery.pyproxy.
 For example in the main configure.zcml of a product you develop::
 
@@ -373,7 +384,7 @@ For example in the main configure.zcml of a product you develop::
 Then, in the ZMI, go to the portal_setup, then the ``import``
 tab. Select ``jquery.pyproxy tests`` in the list, select the ``Skins
 tools`` step and then click on ``Import selected steps``.
-In the ``portal_skins`` tool, you should see a new folder call
+In the ``portal_skins`` tool, you should see a new folder called
 ``pyproxy_tests``. Now open
 ``http://localhost:8080/your_plone_site/pyproxy_tests`` and you will
 see the qUnit tests running.

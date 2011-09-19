@@ -1,12 +1,4 @@
-var pyproxy_debug_mode = false;
-
 (function($) {
-    debug = function(msg) {
-	if (pyproxy_debug_mode) {
-	    console.log(msg);
-	}
-    }
-
     /*
      * Transforms a form into a dictionnary that can be sent
      * to the Ajax call.
@@ -58,12 +50,26 @@ var pyproxy_debug_mode = false;
     };
 
     /* Process the data  */
-    $.pyproxy_process_data = function(data, callback) {
+    $.pyproxy_process_data = function(data, callback, original_this) {
+	var command, selector, i, meth;
+
 	for (i=0; i < data.length; i++) {
 	    command = data[i];
-	    selector = $(command.selector)
-	    meth = $(command.selector)[command.call]
-	    meth.apply(selector, command.args);
+
+	    if (typeof(command.selector.__pyproxy_custom) != 'undefined' && command.selector.is_this) {
+		selector = $(original_this);
+	    } else {
+		selector = $(command.selector);
+	    }
+
+	    do {
+		meth = selector[command.call]
+		selector = meth.apply(selector, command.args);
+		if (typeof(command.next) == 'undefined') {
+		    break;
+		}
+		command = command.next;
+	    } while (true);
 	}
 	
 	if (typeof(callback) == 'function') {
@@ -84,7 +90,7 @@ var pyproxy_debug_mode = false;
      * Callback is a function which is executed once the call done.
      */
 
-    $.pyproxy_call = function(url, data, callback) {
+    $.pyproxy_call = function(url, data, callback, original_this) {
 	var form_id = '';
 
 	if (typeof(data) == 'undefined') {
@@ -93,7 +99,8 @@ var pyproxy_debug_mode = false;
 	else if (typeof(data) == 'string') {
 	    form_id = data;
 	    data = $.pyproxy_form_to_dict(form_id);
-	} else if (typeof(data) == 'function') {
+	}
+	else if (typeof(data) == 'function') {
 	    callback = data;
 	    data = {};
 	}
@@ -102,7 +109,7 @@ var pyproxy_debug_mode = false;
 		       url: url,
 		       data: data,
 		       success: function(d) {
-			   $.pyproxy_process_data(d, callback);
+			   $.pyproxy_process_data(d, callback, original_this);
 		       },
 		       dataType: "json"});
     };
@@ -113,13 +120,12 @@ var pyproxy_debug_mode = false;
      * items matching the selctor.
      * You must use events that can be used with 'live'.
      */   
-    $.fn.pyproxy = function(event, url, data, callback) {	
+    $.fn.pyproxy = function(event, url, data, callback) {
 	make_call = function(e) {
-	    e.preventDefault()
-	    $.pyproxy_call(url, data, callback)
+	    e.preventDefault();
+	    $.pyproxy_call(url, data, callback, this);
 	}
 
-	debug('Binded event \'' + event + '\' on \'' + this.selector + '\' to call \'' + url + '\'')
 	return this.live(event, make_call);
     };
 })(jQuery);

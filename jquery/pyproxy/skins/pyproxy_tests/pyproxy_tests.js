@@ -303,6 +303,20 @@ asyncTest('Using with a @jquery view returning the form casted as a string - usi
 		     });
 });
 
+asyncTest('Using "this" in a pyproxy_call', function() {
+    jq1('#pyproxy_call_this').each(
+	function() {
+	    jq1.pyproxy_call('pyproxy_sample_replace_this_content',
+			     {},
+			     function() {
+				 equal(jq1('#pyproxy_call_this').html(),
+					   'Content replaced');
+				 start();
+			     },
+			     this);
+	});
+});
+
 module('pyproxy');
 
 asyncTest('Binding "pyproxy" to a link element - no form sent', function(){
@@ -333,4 +347,26 @@ asyncTest('Binding "pyproxy" to a link element - sending a form with ignored ele
 		       start();
 		   });
     submit.trigger('click');
+});
+
+asyncTest('Binding a function using "this"', function() {
+    var link = jq1('a#pyproxy_this');
+    link.pyproxy('click',
+		 'pyproxy_sample_replace_this_content',
+		 function() {
+		     equal(link.html(), 'Content replaced');
+		     start();
+		 });
+    link.trigger('click');
+});
+
+asyncTest('Chaining calls', function() {
+    var link = jq1('a#chained_calls_trigger');
+    link.pyproxy('click',
+		 'pyproxy_sample_chained_calls',
+		 function() {
+		     equal(link.parent().find('span').hasClass('my_new_class'), true);
+		     start();
+		 });
+    link.trigger('click');
 });

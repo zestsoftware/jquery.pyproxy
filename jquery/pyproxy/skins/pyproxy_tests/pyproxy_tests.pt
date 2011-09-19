@@ -359,6 +359,18 @@
       <h1>Container for returned form content</h1>
       <div id="pyproxy_tests_form_holder">
       </div>
+
+      <h1>Test for using "this" keyword</h1>
+      <div id="pyproxy_tests_this_holder">
+        <span id="pyproxy_call_this"></span>
+        <a id="pyproxy_this"></a>
+      </div>
+
+      <h1>Container for chained calls test</h1>
+      <div id="pyproxy_tests_chained_calls_holder">
+        <a id="chained_calls_trigger">Click here to add class to the following span</a>
+        <span>I'll get a new class</span>
+      </div>
     </div>
   </body>
 </html>
