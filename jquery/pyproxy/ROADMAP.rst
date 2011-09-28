@@ -26,7 +26,7 @@ What should be coming for the next releases.
 0.5
 ---
 
- - tests for the Plone specifics.
+ - tests for the Plone specifics. [done]
 
  - tests for the Django specifics (there should only be the @jquery
    decorator).

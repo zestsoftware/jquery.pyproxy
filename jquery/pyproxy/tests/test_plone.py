@@ -42,26 +42,11 @@ class PyproxyTestCase(ptc.FunctionalTestCase):
         self.login_as_user(ptc.portal_owner,
                            ptc.default_password)
 
-    def enable_password_choice(self):
-        self.login_as_manager()
-        self.browser.open('%s/@@security-controlpanel' % self.portal_url)
-        ctrl = self.browser.getControl("Let users select their own passwords")
-        ctrl.selected = True
-        self.browser.getControl('Save').click()
-        self.browser.getLink('Log out').click()
-
     def disable_resources_merging(self):
         self.login_as_manager()
-
-        # We mock the tools 'generateId' method to avoid
-        # adding '-cachekey' stuff.
-        def mock_generateId(self, res_id, prev_id=None):
-            return res_id
-
         for tool in ['portal_css', 'portal_javascripts']:
             self.portal[tool].debugmode = True
             self.portal[tool].autogroupingmode = False
-            self.portal[tool].generateId = mock_generateId
 
     def install_products(self):
         fiveconfigure.debug_mode = True
@@ -75,31 +60,11 @@ class PyproxyTestCase(ptc.FunctionalTestCase):
         self.addProfile('jquery.pyproxy:tests')
         self.addProduct('jquery.pyproxy')
 
-    def register_user(self, fullname, email, password, language):
-        self.browser.open('%s/logout' % self.portal_url)
-        self.browser.open('%s/join_form' % self.portal_url)
-        self.browser.getControl(name='fullname').value = fullname
-        self.browser.getControl(name='username').value = fullname
-        self.browser.getControl(name='email').value = email
-        self.browser.getControl(name='password').value = password
-        self.browser.getControl(name='password_confirm').value = password
-        self.browser.getControl(name='form.button.Register').click()
-        self.browser.open('%s/logout' % self.portal_url)
-
     def setup_data(self):
         self.portal_url = self.portal.absolute_url()
         self.browser = Browser()
-        # self.install_products()
-        # self.enable_password_choice()
-        # self.disable_resources_merging()
-        # self.register_user('ze_french_guy',
-        #                    'ze_french_guy@france.fr',
-        #                    'lemotdepasse',
-        #                    'fr')
-        # self.register_user('japanese_user',
-        #                    'japanese_user@japan.jp',
-        #                    'howdoyousaypasswordinjapanese?',
-        #                    'jp')
+        self.install_products()
+        self.disable_resources_merging()
 
 def test_suite():
     return TestSuite([

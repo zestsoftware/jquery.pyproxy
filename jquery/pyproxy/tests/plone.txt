@@ -13,48 +13,117 @@ JS/CSS integration
 First, we'll tests that the specific javascript file that pyproxy need
 to be used are correctly loaded in every pages.
 
+We first add a simple function to check is a file is present in the
+browser contents::
+
+    >>> import re
+    >>> def file_added(name, is_css = False, is_resource = True):
+    ...     if is_css:
+    ...         data = ('portal_css',
+    ...                 '%20',
+    ...                 is_resource and 'resource' or '',
+    ...                 name,
+    ...                 'css')
+    ...     else:
+    ...         data = ('portal_javascripts',
+    ...                 '%20',
+    ...                 is_resource and 'resource' or '',
+    ...                 name,
+    ...                 'js')
+    ...     exp = r'http://nohost/plone/%s/Plone%sDefault/%s%s-cachekey\d+.%s' % data
+    ...     matches = re.findall(exp, self.browser.contents, re.MULTILINE)
+    ...     return bool(matches)
+
 First the base library:
-    >>> '++resource++jquery.pyproxy.min' in self.browser.contents
+
+    >>> file_added('jquery.pyproxy.min')
     True
 
 And the script that creates the spinner:
-    >>> '++resource++jquery.pyproxy.spinner.min.js' in self.browser.contents
+
+    >>> file_added('jquery.pyproxy.spinner.min')
     True
 
 The non-compressed versions are not integrated by default:
-    >>> '++resource++jquery.pyproxy.js' in self.browser.contents
+    >>> file_added('jquery.pyproxy.js')
     False
-    >>> '++resource++jquery.pyproxy.spinner.js' in self.browser.contents
+
+    >>> file_added('jquery.pyproxy.spinner')
     False
 
 There is also one CSS file used for theming the spinner:
-    >>> '++resource++jquery.pyproxy.spinner.css' in self.browser.contents
+    >>> file_added('jquery.pyproxy.spinner', is_css = True)
     True
+
 
 Plone specific method
 ---------------------
 
-jquery.pyproxy defines some specific methods for Plone users:
+jquery.pyproxy defines some specific methods for Plone users::
+
  - set_portal_message: that automatically translates a message and
  displays it as a normal portal message
+
  - hide_portal_message: that, surprisingly, hides the portal message.
 
 We have a view called 'pyproxy_sample_translated_portal_message' that
 shows the message 'This field is required, please provide some
 information.' as a portal message.
 
-By default, it will show the text in the original language:
+By default, it will show the text in the original language::
+
+    >>> self.login_as_manager()
     >>> self.browser.open('http://nohost/plone/pyproxy_sample_translated_portal_message')
+    >>> print self.browser.contents
+    [{"args": [], "call": "hide", "selector": "dl.portalMessage"},
+     {"args": [], "call": "remove", "selector": "#jq_portal_msg"},
+     {"args": ["<dl id=\"jq_portal_msg\" class=\"portalMessage info\"><dt>Info</dt><dd>This field is required, please provide some information.</dd></dl>"], "call": "before", "selector": "#viewlet-above-content"}]
 
 
-Now if we call the same page logged in as a french guy, the message
-appears in french (and the accents are not a problem):
-    >>> self.login_as_user('ze_french_guy', 'lemotdepasse')
+But depending on the site's language, the message will be
+automatically translated.
+That said, we need some patching to have an effective translation.
+The following code will store the translations for our message, it is
+based on code in "Products/CMFPlone/tests/messages.txt"::
+
+    >>> from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
+    >>> from zope.i18n.interfaces import ITranslationDomain
+    >>> messages = {
+    ...     ('fr', u'This field is required, please provide some information.'): u'Ce champ est obligatoire, veuillez le remplir.',
+    ...     ('ja', u'This field is required, please provide some information.'): u'このフィールドは必須です。何か情報を入力してください。'}
+    >>> mails = SimpleTranslationDomain('plone', messages)
+    >>> from zope.app.testing.ztapi import provideUtility
+    >>> provideUtility(ITranslationDomain, mails, 'plone')
+
+Now we use the site in French, the message is translated::
+
+    >>> self.browser.open('http://nohost/plone/@@language-controlpanel')
+    >>> self.browser.getControl(name='form.default_language').value = ['fr']
+    >>> self.browser.getControl('Save').click()
+    >>> self.browser.getControl('Save').click()
     >>> self.browser.open('http://nohost/plone/pyproxy_sample_translated_portal_message')
+    >>> print self.browser.contents
+    [{"args": [], "call": "hide", "selector": "dl.portalMessage"},
+     {"args": [], "call": "remove", "selector": "#jq_portal_msg"},
+     {"args": ["<dl id=\"jq_portal_msg\" class=\"portalMessage info\"><dt>Info</dt><dd>Ce champ est obligatoire, veuillez le remplir.</dd></dl>"], "call": "before", "selector": "#viewlet-above-content"}]
 
 
-Same thing as a Japanese user:
-    >>> self.login_as_user('japanese_user', 'howdoyousaypasswordinjapanese?')
+Same thing in Japanese::
+
+    >>> self.browser.open('http://nohost/plone/@@language-controlpanel')
+    >>> self.browser.getControl(name='form.default_language').value = ['ja']
+    >>> self.browser.getControl('Save').click()
+    >>> self.browser.getControl('Save').click()
     >>> self.browser.open('http://nohost/plone/pyproxy_sample_translated_portal_message')
+    >>> print self.browser.contents
+    [{"args": [], "call": "hide", "selector": "dl.portalMessage"},
+     {"args": [], "call": "remove", "selector": "#jq_portal_msg"},
+     {"args": ["<dl id=\"jq_portal_msg\" class=\"portalMessage info\"><dt>Info</dt><dd>\u00e3\u0081\u0093\u00e3\u0081\u00ae\u00e3\u0083\u0095\u00e3\u0082\u00a3\u00e3\u0083\u00bc\u00e3\u0083\u00ab\u00e3\u0083\u0089\u00e3\u0081\u00af\u00e5\u00bf\u0085\u00e9\u00a0\u0088\u00e3\u0081\u00a7\u00e3\u0081\u0099\u00e3\u0080\u0082\u00e4\u00bd\u0095\u00e3\u0081\u008b\u00e6\u0083\u0085\u00e5\u00a0\u00b1\u00e3\u0082\u0092\u00e5\u0085\u00a5\u00e5\u008a\u009b\u00e3\u0081\u0097\u00e3\u0081\u00a6\u00e3\u0081\u008f\u00e3\u0081\u00a0\u00e3\u0081\u0095\u00e3\u0081\u0084\u00e3\u0080\u0082</dd></dl>"], "call": "before", "selector": "#viewlet-above-content"}]
 
 
+To hide the added portal message, we can use the 'hide_portal_message'
+method of JQueryProxy::
+
+    >>> self.browser.open('http://nohost/plone/pyproxy_sample_hide_portal_message')
+    >>> print self.browser.contents
+    [{"args": [], "call": "hide", "selector": "dl.portalMessage"}]

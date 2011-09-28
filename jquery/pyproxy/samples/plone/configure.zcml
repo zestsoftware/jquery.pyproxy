@@ -70,13 +70,15 @@
       class=".ajax.Samples"
       attribute="translated_portal_message"
       permission="zope2.View"
-     />
+      />
 
   <browser:page
       for="*"
       name="pyproxy_sample_replace_this_content"
       class=".ajax.Samples"
       attribute="replace_this_content"
+      permission="zope2.View"
+      />
 
   <browser:page
       for="*"
@@ -84,5 +86,5 @@
       class=".ajax.Samples"
       attribute="chained_calls"
       permission="zope2.View"
-     />
+      />
 </configure>
