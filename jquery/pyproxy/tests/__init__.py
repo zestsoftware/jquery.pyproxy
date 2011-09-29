@@ -9,7 +9,7 @@ except ImportError:
     django = None
 
 if django is not None:
-    from django_tests import __test__
+    from django_tests import suite
 else:
     # We are not in a django site, or a weirdly configured one.
     pass
