@@ -4,6 +4,8 @@ Changelog
 0.5 (unreleased)
 ----------------
 
+- added Django specific tests. [vincent]
+
 - finished Plone specific tests. [vincent]
 
 

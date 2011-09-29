@@ -19,4 +19,9 @@ __test__ = {
     'readme': doctest.testfile(
         "../../../README.rst",
         optionflags=OPTIONFLAGS),
+
+    'django': doctest.testfile(
+        "django.txt",
+        optionflags=OPTIONFLAGS),
+
     }

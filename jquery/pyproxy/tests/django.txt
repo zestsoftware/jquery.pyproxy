@@ -1,0 +1,30 @@
+Django specifics tests
+======================
+
+There is not that much specific things for Django. The JQueryObject
+object is the same than the base one.
+We'll just check that the @jquery decorator works fine. As we can not
+use decorators in doctests, the view is defined in samples/django/ajax/sample.
+This view accepts a parameter 'p'. If this one is True, then a pyproxy
+command is executed. Otherwise, nothing is returned::
+
+    >>> from jquery.pyproxy.samples.django.ajax import sample
+
+
+The ``jquery`` decorator will return an HTTPRequest object, even if
+the ecorated method did not return a JQueryProxy object::
+
+    >>> sample(None, True)
+    <django.http.HttpResponse object at ...>
+    
+    >>> sample(None, False)
+    <django.http.HttpResponse object at ...>
+
+Now if we have a look at the content of the page returned, we obtain
+some JSON output::
+
+    >>> sample(None, False).content
+    ''
+
+    >>> sample(None, True).content
+    '[{"args": [], "call": "show", "selector": ".myclass"}]'

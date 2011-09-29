@@ -9,7 +9,7 @@ What should be coming for the next releases.
  - tests for the Plone specifics. [done]
 
  - tests for the Django specifics (there should only be the @jquery
-   decorator).
+   decorator). [done]
 
 0.6
 ---
