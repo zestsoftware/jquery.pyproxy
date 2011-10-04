@@ -1,4 +1,29 @@
+/*******************************************************************************
+ * jquery.pyproxy.js
+ * author: Vincent Pretre (Zest Software)
+ * desc: provides a simple way to integrate Ajax calls in Python-based website.
+ * $.pyproxy_call(options): makes an Ajax call to a remote pyproxy method.
+ * $('myselector').pyproxy(options): binds a pyproxy_call.
+ *
+ * options:
+ * - event (unused with pyproxy_call): the event to bind the call to.
+ * - url: the URL of the method called with Ajax.
+ * - data: a dictionnary of data to send in the Ajax request.
+ * - data_selector: a selector for the form containing the data
+ *    (for example '#myform')
+ * - original_this (only used with pyproxy_call): if the remote method uses
+ *    the keyword 'this', you need to set this value to 'this' in the call
+ *    when using pyproxy, this value is automatically set.
+ ******************************************************************************/
 (function($) {
+    var default_options = {
+	'event': '',
+	'url': '',
+	'data': {},
+	'data_selector': '',
+	'original_this': null
+    }
+
     /*
      * Transforms a form into a dictionnary that can be sent
      * to the Ajax call.
@@ -50,14 +75,14 @@
     };
 
     /* Process the data  */
-    $.pyproxy_process_data = function(data, callback, original_this) {
+    $.pyproxy_process_data = function(data, options) {
 	var command, selector, i, meth;
 
 	for (i=0; i < data.length; i++) {
 	    command = data[i];
 
 	    if (typeof(command.selector.__pyproxy_custom) != 'undefined' && command.selector.is_this) {
-		selector = $(original_this);
+		selector = $(options['original_this']);
 	    } else {
 		selector = $(command.selector);
 	    }
@@ -72,13 +97,37 @@
 	    } while (true);
 	}
 	
-	if (typeof(callback) == 'function') {
-	    callback(data);
+	if (typeof(options['callback']) == 'function') {
+	    options['callback'](data);
 	}
     }
 
     /*
-     * $.pyproxy_call(url, [data, [callback]])
+     * Returns a dictionary of data usable for a POST request.
+     * It first checks if there's a 'data' entry in the options.
+     * Otherwise it uses an empty dictionary.
+     * Then it checks if there's a 'data_selector' entry. If so, it 
+     * extends the previous dictionary using $.pyproxy_form_to_dict
+     * with that selector.
+     */
+    $.pyproxy_grab_data = function(options){
+	var data = options['data'];
+	if (typeof(data) == 'undefined') {
+	    data = {};
+	}
+
+	if (typeof(options['data_selector']) == 'string' && options['data_selector'].length > 0) {
+	    data = $.extend(data, $.pyproxy_form_to_dict(options['data_selector']));
+	}
+
+	return data;
+    }
+
+    /*
+     * $.pyproxy_call(options)
+     * See options description at the top of the file.
+     *
+     * DEPRECATED: $.pyproxy_call(url, [data, [callback]])
      * Call the page located at URL and executes the jquery methods returned by
      * the page.
      *
@@ -89,43 +138,64 @@
      *
      * Callback is a function which is executed once the call done.
      */
-
     $.pyproxy_call = function(url, data, callback, original_this) {
-	var form_id = '';
+	var options = {}
+	if (typeof(url) == 'object') {
+	    /* Using new style API. */
+	    options = $.extend(default_options, url);
+	} else {
+	    /* Old-style API. */
+	    options = default_options;
+	    options['url'] = url;
 
-	if (typeof(data) == 'undefined') {
-	    data = {};
+	    if (typeof(data) == 'string') {
+		options['data_selector'] = data;
+		options['callback'] = callback;
+		options['original_this'] = original_this;
+	    } else if (typeof(data) == 'object') {
+		options['data'] = data;
+		options['callback'] = callback;
+		options['original_this'] = original_this;
+	    } else if (typeof(data) == 'function') {
+		options['callback'] = data;
+		options['original_this'] = callback;
+	    }
 	}
-	else if (typeof(data) == 'string') {
-	    form_id = data;
-	    data = $.pyproxy_form_to_dict(form_id);
-	}
-	else if (typeof(data) == 'function') {
-	    callback = data;
-	    data = {};
-	}
+	data = $.pyproxy_grab_data(options);
 
 	return $.ajax({type: 'POST',
-		       url: url,
+		       url: options['url'],
 		       data: data,
 		       success: function(d) {
-			   $.pyproxy_process_data(d, callback, original_this);
+			   $.pyproxy_process_data(d, options);
 		       },
 		       dataType: "json"});
     };
 
     /*
-     * $('#something').pyproxy(event, url, [data, [callback]])
+     * $('#something').pyproxy(options)
+     * See options description at the top of the file.
+     *
+     * DEPRECATED: $('#something').pyproxy(event, url, [data, [callback]])
      * Binds a call to pyproxy_call with the provided event for
      * items matching the selctor.
      * You must use events that can be used with 'live'.
-     */   
+     */
     $.fn.pyproxy = function(event, url, data, callback) {
-	make_call = function(e) {
-	    e.preventDefault();
-	    $.pyproxy_call(url, data, callback, this);
+	var options = {}
+	if (typeof(event) == 'object') {
+	    /* We're using new style API.*/
+	    options = $.extend(default_options, event);
+	    return this.live(options['event'], function(e) {
+		e.preventDefault();
+		$.pyproxy_call(options);
+	    });
 	}
 
-	return this.live(event, make_call);
+	// Old style API - should be removed in 1.0.
+	return this.live(event, function(e) {
+	    e.preventDefault();
+	    $.pyproxy_call(url, data, callback, this);
+	});
     };
 })(jQuery);
