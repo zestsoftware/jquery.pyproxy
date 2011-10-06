@@ -113,3 +113,55 @@ asyncTest('Using "this" in a pyproxy_call', function() {
 
 
 module('pyproxy - new api');
+
+asyncTest('Binding "pyproxy" to a link element - no form sent', function(){
+    /* We're not using a submit button as the preventDefault is not taken into account ...*/
+    jq1('#pyproxy_tests_extras').append('<a href="#" id="test_empty_form_trigger">Let\'s send nothing</a>');
+    var submit = jq1('#test_empty_form_trigger');
+    submit.pyproxy({event: 'click',
+		    url: 'pyproxy_sample_form_to_string',
+		    callback: function() {
+			equal(jq1('#pyproxy_tests_form_holder').html(),
+			      "{}");
+			start();
+		    }});
+
+    submit.trigger('click');
+});
+
+asyncTest('Binding "pyproxy" to a link element - sending a form with ignored elements', function(){
+    /* We're not using a submit button as the preventDefault is not taken into account ...*/
+    jq1('#pyproxy_tests_extras').append('<a href="#" id="test_empty_form_trigger_ignored">Let\' send something</a>');
+    var submit = jq1('#test_empty_form_trigger_ignored');
+    submit.pyproxy({event: 'click',
+		    url: 'pyproxy_sample_form_to_string',
+		    data_selector: '#qunit_form_sample_ignored_elements',
+		    callback :function() {
+		       equal(jq1('#pyproxy_tests_form_holder').html(),
+			     "{'not_ignored_submit': 'Submit'}");
+		       start();
+		    }});
+    submit.trigger('click');
+});
+
+asyncTest('Binding a function using "this"', function() {
+    var link = jq1('a#pyproxy_this');
+    link.pyproxy({event: 'click',
+		  url: 'pyproxy_sample_replace_this_content',
+		  callback: function() {
+		     equal(link.html(), 'Content replaced');
+		     start();
+		  }});
+    link.trigger('click');
+});
+
+asyncTest('Chaining calls', function() {
+    var link = jq1('a#chained_calls_trigger');
+    link.pyproxy({event: 'click',
+		  url: 'pyproxy_sample_chained_calls',
+		  callback:function() {
+		     equal(link.parent().find('span').hasClass('my_new_class'), true);
+		     start();
+		  }});
+    link.trigger('click');
+});
