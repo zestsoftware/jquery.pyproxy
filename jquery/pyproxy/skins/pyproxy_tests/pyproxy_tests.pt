@@ -30,9 +30,17 @@
     <script type="text/javascript"
             src="qunit.js">
     </script>
+
     <script type="text/javascript"
-            src="pyproxy_tests.js">
+            src="pyproxy_tests_submeths.js">
     </script>
+    <script type="text/javascript"
+            src="pyproxy_tests_old_api.js">
+    </script>
+    <script type="text/javascript"
+            src="pyproxy_tests_new_api.js">
+    </script>
+
   </metal:javascript_head>
 
 
@@ -75,6 +83,7 @@
             <input type="text"
                    id="empty_text"
                    name="empty_text"
+                   autocomplete="off"
                    value="" />
           </div>
 
@@ -84,6 +93,7 @@
             <input type="password"
                    id="empty_password"
                    name="empty_password"
+                   autocomplete="off"
                    value="" />
           </div>
 
