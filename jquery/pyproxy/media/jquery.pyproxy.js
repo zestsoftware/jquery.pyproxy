@@ -20,7 +20,7 @@
 	'event': '',
 	'url': '',
 	'data': {},
-	'data_selector': '',
+	'data_selector': null,
 	'original_this': null
     }
 
@@ -75,13 +75,25 @@
     };
 
     /* Process the data  */
-    $.pyproxy_process_data = function(data, options) {
+    $.pyproxy_process_data = function(data, options, original_this) {
 	var command, selector, i, meth;
+
+	if (typeof(options) == 'undefined') {
+	    options = {'callback': null,
+		       'original_this': null};
+	} else 	if (typeof(options) == 'function') {
+	    // Old style API.
+	    options = {'callback': options,
+		       'original_this': original_this};
+	}
 
 	for (i=0; i < data.length; i++) {
 	    command = data[i];
 
 	    if (typeof(command.selector.__pyproxy_custom) != 'undefined' && command.selector.is_this) {
+		if (typeof(options['original_this']) == 'undefined') {
+		    continue;
+		}
 		selector = $(options['original_this']);
 	    } else {
 		selector = $(command.selector);
@@ -111,13 +123,9 @@
      * with that selector.
      */
     $.pyproxy_grab_data = function(options){
-	var data = options['data'];
-	if (typeof(data) == 'undefined') {
-	    data = {};
-	}
-
+	var data = $.extend({}, options['data']);
 	if (typeof(options['data_selector']) == 'string' && options['data_selector'].length > 0) {
-	    data = $.extend(data, $.pyproxy_form_to_dict(options['data_selector']));
+	    $.extend(data, $.pyproxy_form_to_dict(options['data_selector']));
 	}
 
 	return data;
@@ -142,10 +150,10 @@
 	var options = {}
 	if (typeof(url) == 'object') {
 	    /* Using new style API. */
-	    options = $.extend(default_options, url);
+	    $.extend(options, default_options, url);
 	} else {
 	    /* Old-style API. */
-	    options = default_options;
+	    $.extend(options, default_options);
 	    options['url'] = url;
 
 	    if (typeof(data) == 'string') {
@@ -158,14 +166,17 @@
 		options['original_this'] = original_this;
 	    } else if (typeof(data) == 'function') {
 		options['callback'] = data;
-		options['original_this'] = callback;
+		if (typeof(callback) != 'undefined') {
+		    options['original_this'] = callback;
+		} else if (typeof(original_this) != 'undefined') {
+		    options['original_this'] = original_this;
+		}
 	    }
 	}
-	data = $.pyproxy_grab_data(options);
 
 	return $.ajax({type: 'POST',
 		       url: options['url'],
-		       data: data,
+		       data: $.pyproxy_grab_data(options),
 		       success: function(d) {
 			   $.pyproxy_process_data(d, options);
 		       },
@@ -185,7 +196,8 @@
 	var options = {}
 	if (typeof(event) == 'object') {
 	    /* We're using new style API.*/
-	    options = $.extend(default_options, event);
+	    options = $.extend({}, default_options, event);
+	    options['original_this'] = this;
 	    return this.live(options['event'], function(e) {
 		e.preventDefault();
 		$.pyproxy_call(options);

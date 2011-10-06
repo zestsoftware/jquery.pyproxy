@@ -7,5 +7,4 @@
  <skin-path name="*">
   <layer name="pyproxy_tests" />
  </skin-path>
-
 </object>
