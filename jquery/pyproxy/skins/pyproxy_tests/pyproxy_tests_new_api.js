@@ -155,6 +155,20 @@ asyncTest('Binding a function using "this"', function() {
     link.trigger('click');
 });
 
+asyncTest('Binding a function using "this" - only the current element is replaced', function() {
+    var link = jq1('a#pyproxy_multi_this');
+    var link1 = jq1('a#pyproxy_multi_this1');
+    jq1('a.pyproxy_multi_this').pyproxy({event: 'click',
+					 url: 'pyproxy_sample_replace_this_content',
+					 callback: function() {
+					     equal(link.html(), 'Content replaced');
+					     equal(link1.html(), '');
+					     start();
+					 }});
+    link.trigger('click');
+});
+
+
 asyncTest('Chaining calls', function() {
     var link = jq1('a#chained_calls_trigger');
     link.pyproxy({event: 'click',

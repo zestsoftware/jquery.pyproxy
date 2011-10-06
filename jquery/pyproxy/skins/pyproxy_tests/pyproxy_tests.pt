@@ -374,6 +374,11 @@
       <div id="pyproxy_tests_this_holder">
         <span id="pyproxy_call_this"></span>
         <a id="pyproxy_this"></a>
+
+        <a class="pyproxy_multi_this"
+           id="pyproxy_multi_this"></a>
+        <a class="pyproxy_multi_this"
+           id="pyproxy_multi_this1"></a>
       </div>
 
       <h1>Container for chained calls test</h1>
