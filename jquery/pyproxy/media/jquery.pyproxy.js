@@ -75,7 +75,7 @@
     };
 
     /* Process the data  */
-    $.pyproxy_process_data = function(data, options, original_this) {
+    $.pyproxy_process_data = function(data, options) {
 	var command, selector, i, meth;
 
 	if (typeof(options) == 'undefined') {
@@ -84,16 +84,13 @@
 	} else 	if (typeof(options) == 'function') {
 	    // Old style API.
 	    options = {'callback': options,
-		       'original_this': original_this};
+		       'original_this': null};
 	}
 
 	for (i=0; i < data.length; i++) {
 	    command = data[i];
 
 	    if (typeof(command.selector.__pyproxy_custom) != 'undefined' && command.selector.is_this) {
-		if (typeof(options['original_this']) == 'undefined') {
-		    continue;
-		}
 		selector = $(options['original_this']);
 	    } else {
 		selector = $(command.selector);
