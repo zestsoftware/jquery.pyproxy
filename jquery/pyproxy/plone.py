@@ -66,6 +66,14 @@ def jquery(function):
     def _jquery(*args, **kwargs):
         jq = function(*args, **kwargs)
         if jq:
+            if len(args) > 0:
+                # We specify the content-type to avoid issues with Diazo
+                # wrapping the response into HTML tags.
+                # Based on: http://stackoverflow.com/questions/7512183/diazo-add-unwanted-html-header-into-json-response
+                view = args[0]
+                if hasattr(view, 'request'):
+                    view.request.response.setHeader(
+                        "Content-type","application/json")
             return json.dumps(jq.json_serializable())
         else:
             return

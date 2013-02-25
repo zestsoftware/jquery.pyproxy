@@ -9,6 +9,13 @@ Changelog
 - finished Plone specific tests. [vincent]
 
 
+0.4.2 (2013-02-25)
+------------------
+
+- Fix issue with Diazo wrapping the responses with HTML
+  tags. [vincent]
+
+
 0.4.1 (2011-09-19)
 ------------------
 
