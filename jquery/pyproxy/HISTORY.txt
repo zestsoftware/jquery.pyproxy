@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.5 (unreleased)
-----------------
+0.4.2 (2013-02-25)
+------------------
 
 - Fix issue with Diazo wrapping the responses with HTML
   tags. [vincent]
