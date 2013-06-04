@@ -4,6 +4,9 @@ Changelog
 0.5 (unreleased)
 ----------------
 
+- Point to http://github.com/zestsoftware/jquery.pyproxy
+  [maurits]
+
 - added Django specific tests. [vincent]
 
 - finished Plone specific tests. [vincent]
