@@ -3,6 +3,7 @@ from Products.Five import BrowserView
 from jquery.pyproxy.plone import JQueryProxy, jquery, this
 from jquery.pyproxy.samples import common
 
+
 class Samples(BrowserView):
     @jquery
     def do_nothing(self):

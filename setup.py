@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
-import sys, os
+import os
+
 
 def get_file_contents(filename):
     file_path = os.path.join(filename)

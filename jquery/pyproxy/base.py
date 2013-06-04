@@ -3,6 +3,7 @@ from types import NoneType
 
 from jquery.pyproxy.utils import package_contents
 
+
 class JQueryCommand(object):
     """ An object storing JQuery commands done.
     """
@@ -36,7 +37,7 @@ class JQueryCommand(object):
 
         # We compute the minimum and maximum number of arguments expected.
         max_args = len(expected_args)
-        min_args = 0        
+        min_args = 0
         for arg in expected_args:
             # If we find a list containing NoneType, we stop the loop
             # as we found the first optionnal parameter.
@@ -47,8 +48,8 @@ class JQueryCommand(object):
             min_args += 1
 
         # We check that the number of arguments is correct
-        if len(args) > max_args or \
-               len(args) < min_args:
+        if (len(args) > max_args or
+                len(args) < min_args):
             if max_args == 0:
                 raise TypeError(
                     "Method '%s' does not take any argument" %
@@ -75,7 +76,7 @@ class JQueryCommand(object):
             elif expected != type(arg):
                 raise TypeError(
                     "Argument %s of method %s must be: %s" %
-                    (i + 1, self.method, expected))                       
+                    (i + 1, self.method, expected))
             i += 1
 
         # If no error has been found, we can save the arguments.
@@ -138,6 +139,7 @@ class JQueryCommand(object):
 
         return d
 
+
 class JQueryProxy(object):
     base_grammar = {}
 
@@ -153,6 +155,7 @@ class JQueryProxy(object):
         for plugin in plugins:
             try:
                 exec 'from jquery.pyproxy.plugins.%s import grammar' % plugin
+                # Yes, pyflakes will complain.
                 self.extend_grammar(grammar)
 
             except ImportError:
@@ -200,7 +203,7 @@ class JQueryProxy(object):
             if meth in self.grammar:
                 # We try to avoid clashes.
                 continue
-            
+
             self.grammar[meth] = grammar[meth]
 
     def list_calls(self):
@@ -219,7 +222,7 @@ class JQueryProxy(object):
 
     def __call__(self, selector = ''):
         self.selectors.append(selector)
-        
+
         self.calls.append(JQueryCommand(self.grammar))
         return self.calls[-1]
 
@@ -278,7 +281,7 @@ class JQueryProxy(object):
         import warnings
         warnings.warn(
             'JQueryProxy.hide_errors will be removed in version 1.0',
-        DeprecationWarning)
+            DeprecationWarning)
 
         for err in errors:
             self('#' + err).removeClass('errormessage')
@@ -299,7 +302,7 @@ class JQueryProxy(object):
         import warnings
         warnings.warn(
             'JQueryProxy.show_errors will be removed in version 1.0',
-        DeprecationWarning)
+            DeprecationWarning)
 
         for err in errors:
             self('#' + err).addClass('errormessage')
@@ -347,8 +350,7 @@ def clean_string(s):
     """
     import warnings
     warnings.warn(
-        'Clean string is not needed anymore, since eval() has been removed' + \
+        'Clean string is not needed anymore, since eval() has been removed' +
         ' on JS side',
         DeprecationWarning)
     return s
-

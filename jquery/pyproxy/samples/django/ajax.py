@@ -1,5 +1,6 @@
 from jquery.pyproxy.jq_django import JQueryProxy, jquery
 
+
 @jquery
 def sample(request, p):
     """ Simple view hiding nodes with the class 'myclass' if p is True.

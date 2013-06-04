@@ -1,5 +1,6 @@
 import os
 
+
 def custom_endswith(s, ext):
     """ Python 2.4 do not accept a list/tuple for
     endswith. So we build a custom one.
@@ -43,12 +44,14 @@ def custom_endswith(s, ext):
     else:
         msg = 'Custom endswith only accepts list, tuple or string, found: %s'
         raise TypeError(msg % type(ext))
-            
+
     return False
 
 # Code taken from here:
 # http://stackoverflow.com/questions/487971/is-there-a-standard-way-to-list-names-of-python-modules-in-a-package
 MODULE_EXTENSIONS = ['.py', '.pyc', '.pyo']
+
+
 def package_contents():
     from jquery.pyproxy import plugins as plugin_module
     folder = '/'.join(plugin_module.__file__.split('/')[:-1])

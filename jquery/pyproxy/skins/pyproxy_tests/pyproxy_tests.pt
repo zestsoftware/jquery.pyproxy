@@ -332,7 +332,7 @@
 
         <fieldset id="qunit_form_sample_ignored_elements">
           <legend>Ignored elements</legend>
-          
+
           <div id="field_not_ignored_submit">
             <label for="not_ignored_submit">The main submit</label>
             <input type="submit"

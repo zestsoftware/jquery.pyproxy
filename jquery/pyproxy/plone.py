@@ -8,13 +8,13 @@ from zope.i18nmessageid.message import Message
 from Products.CMFPlone import PloneMessageFactory as _p
 
 from base import JQueryProxy as JQueryProxyBase
-from base import this
+
 
 class JQueryProxy(JQueryProxyBase):
 
     def _get_default_language(self):
         portal = getSite()
-        
+
         props = getToolByName(portal, 'portal_properties')
         return props.site_properties.getProperty('default_language')
 
@@ -23,13 +23,13 @@ class JQueryProxy(JQueryProxyBase):
 
         It hides both portal messages (the normal one and the KSS
         one and recreates a fresh one.
-        """ 
+        """
 
         # We hide the existing ones.
         self('dl.portalMessage').hide()
 
         # We delete our portal message.
-        self('#jq_portal_msg').remove() 
+        self('#jq_portal_msg').remove()
 
         # And create a fresh one.
         html = '<dl id="jq_portal_msg" class="portalMessage %s">' +\
@@ -47,7 +47,7 @@ class JQueryProxy(JQueryProxyBase):
         portal = getSite()
         if isinstance(message, Message):
             message = translate(message, context=portal.REQUEST)
- 
+
         self('#viewlet-above-content').before(html % (msg_type,
                                                       msg_title,
                                                       message))
@@ -56,6 +56,7 @@ class JQueryProxy(JQueryProxyBase):
         """ Hides all portal messages.
         """
         self('dl.portalMessage').hide()
+
 
 def jquery(function):
     """ The @jquery decorator can be added to a function
@@ -73,7 +74,7 @@ def jquery(function):
                 view = args[0]
                 if hasattr(view, 'request'):
                     view.request.response.setHeader(
-                        "Content-type","application/json")
+                        "Content-type", "application/json")
             return json.dumps(jq.json_serializable())
         else:
             return

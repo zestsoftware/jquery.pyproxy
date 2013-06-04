@@ -19,4 +19,3 @@
 # available['dummy'] = [str, [unicode, NoneType], dict]
 # but that would be stupid as the second parameter would be optional
 # and not the third one. So don't ...
-

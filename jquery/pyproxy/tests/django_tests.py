@@ -1,4 +1,3 @@
-import os
 import doctest
 from django.utils import unittest
 
@@ -12,9 +11,10 @@ testmods = {'base': base,
 testfiles = {'readme': '../../../README.rst',
              'django': 'django.txt'}
 
+
 def suite():
     return unittest.TestSuite(
         [doctest.DocTestSuite(mod, optionflags = OPTIONFLAGS)
-         for mod in testmods.values()] + \
+         for mod in testmods.values()] +
         [doctest.DocFileSuite(f, optionflags = OPTIONFLAGS)
          for f in testfiles.values()])

@@ -89,7 +89,7 @@
 
       <form id="sample_2_form" action="">
         <label>
-          Enter text for the new list item: 
+          Enter text for the new list item:
           <input type="text" name="text" id="sample_2_text" />
         </label>
         <input type="submit"
@@ -183,10 +183,10 @@
       </form>
 
       <div id="pyproxy_tests_form_holder"></div>
-      
+
       <h2>Sample 4 - using callback</h2>
       <p>As you might have guessed, the Ajax calls performed by pyproxy are
-      asynchronous. So if you need to have some actions performed after 
+      asynchronous. So if you need to have some actions performed after
       the call to your server, you have to create a callback function.</p>
 
       <p>In the following example, the callback will bind 'click' events
@@ -225,7 +225,7 @@
         <li>hide_portal_message(): to hide the portal message (surprisingly).</li>
       </ul>
 
-      <p>There might be more to come in the next releases.</p>      
+      <p>There might be more to come in the next releases.</p>
 
       <h2>Sample 1 - playing with the status message</h2>
       <p> Depending on the text you enter in the text field, you'll obtain
@@ -240,7 +240,7 @@
             method="POST"
             tal:attributes="action context/absolute_url" >
         <label>
-          Enter some text, or not: 
+          Enter some text, or not:
           <input type="text"
                  name="text" />
         </label>
@@ -251,9 +251,9 @@
       </form>
 
       <h2>Sample 2 - removing status message</h2>
-      <p>As the JqueryProxy object defined in jquery.pyproxy.plone allows 
-      you to set portal message, it's fair it also allows to remove them.</p> 
-      
+      <p>As the JqueryProxy object defined in jquery.pyproxy.plone allows
+      you to set portal message, it's fair it also allows to remove them.</p>
+
       <input type="submit"
              class="allowMultiSubmit"
              value="Remove the portal message"

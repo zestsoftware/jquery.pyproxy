@@ -17,6 +17,7 @@ ptc.setupPloneSite()
 
 import jquery.pyproxy
 
+
 class PyproxyTestCase(ptc.FunctionalTestCase):
     def afterSetUp(self):
         # This hack allows us to get the traceback when an
@@ -30,7 +31,7 @@ class PyproxyTestCase(ptc.FunctionalTestCase):
         from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
         SiteErrorLog.raising = raising
         transaction.commit()
-        
+
     def login_as_user(self, username, password):
         self.browser.open('%s/logout' % self.portal_url)
         self.browser.open('%s/login_form' % self.portal_url)
@@ -65,6 +66,7 @@ class PyproxyTestCase(ptc.FunctionalTestCase):
         self.browser = Browser()
         self.install_products()
         self.disable_resources_merging()
+
 
 def test_suite():
     return TestSuite([
