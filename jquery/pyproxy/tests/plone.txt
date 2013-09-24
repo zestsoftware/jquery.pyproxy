@@ -17,20 +17,22 @@ We first add a simple function to check is a file is present in the
 browser contents::
 
     >>> import re
+    >>> from Products.CMFCore.utils import getToolByName
+    >>> theme_name = getToolByName(self.portal, 'portal_skins').getDefaultSkin().replace(' ', '%20')
     >>> def file_added(name, is_css = False, is_resource = True):
     ...     if is_css:
     ...         data = ('portal_css',
-    ...                 '%20',
+    ...                 theme_name,
     ...                 is_resource and 'resource' or '',
     ...                 name,
     ...                 'css')
     ...     else:
     ...         data = ('portal_javascripts',
-    ...                 '%20',
+    ...                 theme_name,
     ...                 is_resource and 'resource' or '',
     ...                 name,
     ...                 'js')
-    ...     exp = r'http://nohost/plone/%s/Plone%sDefault/%s%s-cachekey\d+.%s' % data
+    ...     exp = r'http://nohost/plone/%s/%s/%s%s-cachekey\d+.%s' % data
     ...     matches = re.findall(exp, self.browser.contents, re.MULTILINE)
     ...     return bool(matches)
 
