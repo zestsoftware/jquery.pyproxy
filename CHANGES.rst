@@ -4,6 +4,9 @@ Changelog
 0.5 (unreleased)
 ----------------
 
+- Add empty upgrade step to properly set our profile version.
+  [maurits]
+
 - Adapt imports to work in Plone 3.3 through 4.3.
   [maurits]
 

@@ -46,4 +46,14 @@
       description='jquery.pyproxy'
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+
+  <genericsetup:upgradeStep
+      title="Dummy upgrade step"
+      description="Do nothing, except updating the profile version."
+      source="999"
+      destination="1000"
+      profile="jquery.pyproxy:default"
+      handler=".migration.dummy_handler"
+      />
+
 </configure>
