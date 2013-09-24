@@ -1,2 +1,3 @@
 recursive-include jquery *
+include *rst *txt
 global-exclude *.pyc
