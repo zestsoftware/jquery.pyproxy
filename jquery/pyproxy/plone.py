@@ -12,6 +12,9 @@ from zope.i18nmessageid.message import Message
 from Products.CMFPlone import PloneMessageFactory as _p
 
 from base import JQueryProxy as JQueryProxyBase
+from base import this
+
+this  # pyflakes, we make this available for third party code to import.
 
 
 class JQueryProxy(JQueryProxyBase):
