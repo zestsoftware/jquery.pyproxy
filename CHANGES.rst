@@ -4,7 +4,8 @@ Changelog
 0.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Adapt imports to work in Plone 3.3 through 4.3.
+  [maurits]
 
 
 0.4.3 (2013-06-04)

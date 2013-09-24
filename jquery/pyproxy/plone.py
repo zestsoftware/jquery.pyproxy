@@ -1,6 +1,10 @@
 import simplejson as json
 
-from zope.app.component.hooks import getSite
+try:
+    from zope.component.hooks import getSite
+    getSite  # pyflakes
+except ImportError:
+    from zope.app.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 from zope.i18n import translate
 from zope.i18nmessageid.message import Message
