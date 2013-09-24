@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.5 (unreleased)
+0.5 (2013-09-24)
 ----------------
 
 - Add empty upgrade step to properly set our profile version.
