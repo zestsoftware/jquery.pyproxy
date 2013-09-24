@@ -2,9 +2,19 @@ import doctest
 import transaction
 from unittest import TestSuite
 
-from Products.Five.testbrowser import Browser
-from Products.Five import fiveconfigure, zcml
-
+try:
+    from Testing.testbrowser import Browser
+    Browser  # pyflakes
+except ImportError:
+    # BBB Plone 4.0
+    from Products.Five.testbrowser import Browser
+try:
+    from Zope2.App import zcml
+    zcml  # pyflakes
+except ImportError:
+    # BBB Plone 4.0
+    from Products.Five import zcml
+from Products.Five import fiveconfigure
 from Testing import ZopeTestCase as ztc
 from Products.PloneTestCase import PloneTestCase as ptc
 from Testing.ZopeTestCase.zopedoctest import ZopeDocFileSuite
