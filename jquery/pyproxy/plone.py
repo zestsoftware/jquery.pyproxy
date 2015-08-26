@@ -43,7 +43,7 @@ class JQueryProxy(JQueryProxyBase):
                '<dt>%s</dt><dd>%s</dd></dl>'
 
         # We get the correct title (Info, Warning, Error)
-        if not msg_type in ['info', 'warning', 'error']:
+        if msg_type not in ['info', 'warning', 'error']:
             msg_type='info'
 
         lang = self._get_default_language()

@@ -19,13 +19,12 @@ from Testing import ZopeTestCase as ztc
 from Products.PloneTestCase import PloneTestCase as ptc
 from Testing.ZopeTestCase.zopedoctest import ZopeDocFileSuite
 from Testing.ZopeTestCase import FunctionalDocFileSuite
+import jquery.pyproxy
 
 OPTIONFLAGS = (doctest.ELLIPSIS |
                doctest.NORMALIZE_WHITESPACE)
 
 ptc.setupPloneSite()
-
-import jquery.pyproxy
 
 
 class PyproxyTestCase(ptc.FunctionalTestCase):
