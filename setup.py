@@ -17,7 +17,8 @@ long = "%s\n\n\n%s\n\n%s" % (readme, roadmap, history)
 
 setup(name='jquery.pyproxy',
       version=version,
-      description="A simple python egg and jquery plugin to easily use JQuery in Django/Plone/.. websites.",
+      description=("A simple python egg and jquery plugin to easily use "
+                   "JQuery in Django/Plone/.. websites."),
       long_description=long,
       classifiers=[
           "Framework :: Plone",
@@ -26,6 +27,7 @@ setup(name='jquery.pyproxy',
           "Framework :: Plone :: 4.1",
           "Framework :: Plone :: 4.2",
           "Framework :: Plone :: 4.3",
+          "Framework :: Plone :: 5.0",
           "Framework :: Django",
           "Programming Language :: Python",
           "Programming Language :: Python :: 2.4",

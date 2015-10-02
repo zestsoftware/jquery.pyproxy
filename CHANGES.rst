@@ -4,7 +4,8 @@ Changelog
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Noted compatibility with Plone 5.0 in readme.
+  [maurits]
 
 
 0.5 (2013-09-24)
@@ -39,6 +40,7 @@ Changelog
 ------------------
 
 - Updated the minified version. [vincent]
+
 
 0.4 (2011-09-19)
 ----------------
@@ -146,4 +148,3 @@ Changelog
   Django. [vincent]
 
 - added log file + python egg. [vincent]
-

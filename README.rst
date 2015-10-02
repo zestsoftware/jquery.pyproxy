@@ -418,9 +418,11 @@ Compatibility
 
 Tested with:
 
- - jQuery 1.2 and 1.4
+ - jQuery 1.2, 1.4, 1.7 (probably all 1.x)
 
- - Python 2.4 and 2.6
+ - Python 2.4, 2.6, and 2.7
+
+ - Plone 3.3, 4.0-4.3 and 5.0
 
  - Firefox
 
